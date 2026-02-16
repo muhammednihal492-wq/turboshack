@@ -1,0 +1,162 @@
+@import 'tailwindcss';
+
+:root {
+    --background: #000000;
+    --foreground: #ffffff;
+
+    /* Brand Colors */
+    --primary: #000000;
+    --secondary: #ff0000;
+    --accent: #ffd000;
+}
+
+body {
+    color: var(--foreground);
+    background-color: #111;
+    background-image:
+        radial-gradient(circle at center, #222 1px, transparent 1px),
+        radial-gradient(circle at center, #1a1a1a 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+    font-family: var(--font-orbitron), sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* Custom Selection Color */
+::selection {
+    background: var(--secondary);
+    color: var(--primary);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 5px;
+    background: var(--primary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--secondary);
+    border-radius: 2px;
+}
+
+/* NEW HERO SECTION - SPLIT LAYOUT */
+.hero {
+    display: flex;
+    width: 100%;
+    height: 100dvh;
+    margin-top: 0;
+    background: transparent;
+    overflow: hidden;
+    position: relative;
+}
+
+/* LEFT SIDE: VIDEO CLIPPED -> NOW FULL WIDTH */
+.hero-left {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    background: black;
+}
+
+.hero-video {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    animation: carEnter 1.6s ease-out forwards;
+}
+
+/* Remove the fade separator since it's full width now */
+.hero-left::after {
+    display: none;
+}
+
+/* RIGHT SIDE: HIDDEN/COLLAPSED */
+.hero-right {
+    display: none;
+}
+
+@keyframes carEnter {
+    from {
+        transform: translateX(-60%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.hero-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    z-index: 3;
+    padding-left: 10%;
+    pointer-events: none;
+    /* Let clicks pass through */
+}
+
+.hero-content h1 {
+    font-size: 4rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    line-height: 1.1;
+    text-transform: uppercase;
+    background: linear-gradient(to right, #ffffff, #ff0000);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.hero-content p {
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        flex-direction: column;
+        margin-top: 0;
+        height: 100dvh;
+    }
+
+    /* Video takes full available height on mobile too */
+    .hero-left {
+        height: 100%;
+    }
+
+    .hero-video {
+        display: block;
+    }
+
+    /* Content adjustments remain same */
+    .hero-content {
+        padding-left: 0;
+        align-items: center;
+        text-align: center;
+        padding-top: 0;
+    }
+
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero-content p {
+        font-size: 1rem;
+    }
+}
