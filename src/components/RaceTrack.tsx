@@ -60,6 +60,30 @@ export default function RaceTrack() {
             duration: 10 // Relative duration for the whole scrub
         });
 
+        // JUMP SEQUENCE (at 45% of path)
+        const jumpStart = 4.5;
+        const jumpDuration = 1.0;
+
+        tl.to(car, {
+            scale: 1.5,
+            ease: "power2.out",
+            duration: jumpDuration / 2
+        }, jumpStart)
+            .to(car, {
+                scale: 1,
+                ease: "power2.in",
+                duration: jumpDuration / 2
+            }, jumpStart + jumpDuration / 2);
+
+        // Landing Impact (Squash)
+        tl.to(car, {
+            scaleY: 0.8,
+            scaleX: 1.2,
+            duration: 0.1,
+            yoyo: true,
+            repeat: 1
+        }, jumpStart + jumpDuration);
+
         // 2. MODEL TRANSFORMATIONS (Scrubbed with Motion)
         // We insert callbacks or state changes at specific progress points
         // But for smoother morphing, we can use a "virtual" progress tween to drive React state?
@@ -102,7 +126,7 @@ export default function RaceTrack() {
     }, { scope: containerRef });
 
     return (
-        <div ref={containerRef} className="absolute top-0 right-0 w-full md:w-1/2 h-full pointer-events-none z-10 overflow-visible">
+        <div ref={containerRef} className="absolute top-0 right-0 w-[60%] md:w-1/2 h-full pointer-events-none z-10 overflow-visible">
             {/*
             3D TRANSFORMED TRACK CONTAINER
             We do NOT use fixed here. The track is part of the document flow (absolute).
@@ -113,19 +137,16 @@ export default function RaceTrack() {
                 <svg
                     className="w-full h-full absolute top-0 left-0"
                     preserveAspectRatio="none"
-                    viewBox="0 0 100 1200"
+                    viewBox="0 0 100 3800"
                     style={{ height: '100%', width: '100%' }}
                 >
                     <defs>
                         {/* 3D Texture Gradients */}
+                        {/* 3D Texture Gradients */}
                         <linearGradient id="trackGradient" x1="0%" y1="0%" x2="0%" y2="100%">
                             <stop offset="0%" stopColor="#5d4037" /> {/* Dirt - Rough */}
-                            <stop offset="10%" stopColor="#222" />    {/* Asphalt Start */}
-                            <stop offset="25%" stopColor="#0f0f0f" />
-                            <stop offset="40%" stopColor="#333" />    {/* Lighter Asphalt */}
-                            <stop offset="60%" stopColor="#1a1a1a" />
-                            <stop offset="80%" stopColor="#050505" /> {/* F1 - Deep Black */}
-                            <stop offset="100%" stopColor="#000" />
+                            <stop offset="10%" stopColor="#333" />    {/* Asphalt Start */}
+                            <stop offset="100%" stopColor="#333" />   {/* Asphalt End (Uniform) */}
                         </linearGradient>
 
                         {/* Curb Pattern */}
@@ -143,11 +164,18 @@ export default function RaceTrack() {
                     C 80 100, 80 200, 50 300
                     S 10 500, 50 600
                     S 90 800, 50 900
-                    S 20 1100, 50 1250"
+                    S 20 1100, 50 1250
+                    S 80 1450, 50 1600
+                    S 20 1800, 50 2000
+                    S 80 2200, 50 2400
+                    S 20 2600, 50 2800
+                    S 80 3000, 50 3200
+                    S 30 3400, 50 3600
+                    S 60 3700, 50 3800"
                         fill="none"
-                        stroke="black"
+                        stroke="#222"
                         vectorEffect="non-scaling-stroke"
-                        className="opacity-70 translate-y-2 stroke-[100px] md:stroke-[200px]"
+                        className="translate-y-2 stroke-[100px] md:stroke-[200px]"
                     />
 
                     {/*
@@ -158,11 +186,18 @@ export default function RaceTrack() {
                     C 80 100, 80 200, 50 300
                     S 10 500, 50 600
                     S 90 800, 50 900
-                    S 20 1100, 50 1250"
+                    S 20 1100, 50 1250
+                    S 80 1450, 50 1600
+                    S 20 1800, 50 2000
+                    S 80 2200, 50 2400
+                    S 20 2600, 50 2800
+                    S 80 3000, 50 3200
+                    S 30 3400, 50 3600
+                    S 60 3700, 50 3800"
                         fill="none"
                         stroke="url(#curbPattern)"
                         vectorEffect="non-scaling-stroke"
-                        className="stroke-[90px] md:stroke-[180px]"
+                        className="track-path stroke-[90px] md:stroke-[180px]"
                     />
 
                     {/*
@@ -174,12 +209,19 @@ export default function RaceTrack() {
                     C 80 100, 80 200, 50 300
                     S 10 500, 50 600
                     S 90 800, 50 900
-                    S 20 1100, 50 1250"
+                    S 20 1100, 50 1250
+                    S 80 1450, 50 1600
+                    S 20 1800, 50 2000
+                    S 80 2200, 50 2400
+                    S 20 2600, 50 2800
+                    S 80 3000, 50 3200
+                    S 30 3400, 50 3600
+                    S 60 3700, 50 3800"
                         fill="none"
                         stroke="url(#trackGradient)"
                         strokeLinecap="round"
                         vectorEffect="non-scaling-stroke"
-                        className="stroke-[80px] md:stroke-[160px]"
+                        className="track-path stroke-[80px] md:stroke-[160px]"
                     />
 
                     {/*
@@ -190,12 +232,19 @@ export default function RaceTrack() {
                     C 80 100, 80 200, 50 300
                     S 10 500, 50 600
                     S 90 800, 50 900
-                    S 20 1100, 50 1250"
+                    S 20 1100, 50 1250
+                    S 80 1450, 50 1600
+                    S 20 1800, 50 2000
+                    S 80 2200, 50 2400
+                    S 20 2600, 50 2800
+                    S 80 3000, 50 3200
+                    S 30 3400, 50 3600
+                    S 60 3700, 50 3800"
                         fill="none"
                         stroke="#000"
                         strokeDasharray="20 40"
                         vectorEffect="non-scaling-stroke"
-                        className="opacity-30 stroke-[70px] md:stroke-[140px]"
+                        className="track-path opacity-30 stroke-[70px] md:stroke-[140px]"
                     />
 
                     {/* Center Line */}
@@ -204,14 +253,35 @@ export default function RaceTrack() {
                     C 80 100, 80 200, 50 300
                     S 10 500, 50 600
                     S 90 800, 50 900
-                    S 20 1100, 50 1250"
+                    S 20 1100, 50 1250
+                    S 80 1450, 50 1600
+                    S 20 1800, 50 2000
+                    S 80 2200, 50 2400
+                    S 20 2600, 50 2800
+                    S 80 3000, 50 3200
+                    S 30 3400, 50 3600
+                    S 60 3700, 50 3800"
                         fill="none"
                         stroke="white"
                         strokeWidth="4"
                         strokeDasharray="20 30"
                         vectorEffect="non-scaling-stroke"
-                        className="opacity-40"
+                        className="track-path opacity-40"
                     />
+
+                    {/* JUMP RAMP VISUALS */}
+                    <g className="jump-ramp opacity-80">
+                        {/* Ramp Gradient/Highlight */}
+                        <path d="M 20 520 Q 50 530 80 520 L 80 600 Q 50 610 20 600 Z" fill="url(#curbPattern)" opacity="0.2" />
+
+                        {/* Takeoff Arrows */}
+                        <path d="M 35 540 L 50 530 L 65 540" stroke="#facc15" strokeWidth="3" fill="none" />
+                        <path d="M 35 550 L 50 540 L 65 550" stroke="#facc15" strokeWidth="3" fill="none" />
+                        <path d="M 35 560 L 50 550 L 65 560" stroke="#facc15" strokeWidth="3" fill="none" />
+
+                        {/* Launch Label */}
+                        <text x="50" y="590" textAnchor="middle" fill="#facc15" fontSize="8" fontFamily="monospace" fontWeight="bold" letterSpacing="2">AIR TIME</text>
+                    </g>
                 </svg>
             </div>
 
@@ -229,6 +299,7 @@ export default function RaceTrack() {
             Fades out when 'showFinale' is true.
          */}
             <div
+                id="intro-car"
                 ref={carRef}
                 className={`absolute top-0 left-0 w-20 h-36 -ml-10 -mt-18 md:w-48 md:h-80 md:-ml-24 md:-mt-40 z-[9999] flex items-center justify-center transform-style-3d transition-opacity duration-500 pointer-events-none opacity-0 will-change-transform`}
                 style={{ willChange: 'transform' }}

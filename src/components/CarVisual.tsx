@@ -7,7 +7,7 @@ import { useMemo } from 'react';
 const CAR_CONFIGS = {
     offroad: {
         color: '#da291c', // Race Red - deeper, more premium
-        detail: '#171717', // No edits, just checking.ral Dark
+        detail: '#171717', // Neutral Dark
         wheelFront: { w: 38, h: 48, r: 10, x: 48, y: 20 }, // Wider, thicker, larger radius
         wheelRear: { w: 40, h: 48, r: 10, x: 48, y: 145 }, // Massive rear tires
         // Muscular, wide-body Trophy Truck
@@ -23,9 +23,8 @@ const CAR_CONFIGS = {
         bumper: { opacity: 1, y: 5, w: 80, h: 12 }, // Wide Bullbar
         hideUnderbody: true,
         stripes: true, // Add racing stripes for detail
-        image: '/car2.png',
+        image: '/csr1.png',
         imageScale: 1.35,
-        imageRotation: 180,
     },
     race: {
         color: '#06b6d4',
@@ -42,9 +41,8 @@ const CAR_CONFIGS = {
         bumper: { opacity: 0, y: 5, w: 10, h: 5 },
         hideUnderbody: false,
         stripes: false,
-        image: '/car3.png',
-        imageScale: 1,
-        imageRotation: 180,
+        image: '/csr2.png',
+        imageScale: 1.35,
     },
     buggy: {
         color: '#eab308',
@@ -62,7 +60,7 @@ const CAR_CONFIGS = {
         hideUnderbody: false,
         stripes: false,
         image: '/csr3.png',
-        imageScale: 1,
+        imageScale: 1.35,
     },
     arena: {
         color: '#d946ef',
@@ -79,9 +77,8 @@ const CAR_CONFIGS = {
         bumper: { opacity: 0.8, y: 10, w: 70, h: 5 },
         hideUnderbody: false,
         stripes: false,
-        image: '/car4.png',
-        imageScale: 1, // Enhance size to match others
-        imageRotation: 180,
+        image: '/csr4.png',
+        imageScale: 1.35,
     },
     construct: {
         color: '#f97316',
