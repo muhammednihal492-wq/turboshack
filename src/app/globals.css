@@ -161,4 +161,9 @@ body {
     .hero-content p {
         font-size: 1rem;
     }
+
+    .mobile-unmask {
+        mask-image: none !important;
+        -webkit-mask-image: none !important;
+    }
 }

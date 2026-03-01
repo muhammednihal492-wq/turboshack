@@ -24,7 +24,7 @@ const CAR_CONFIGS = {
         hideUnderbody: true,
         stripes: true, // Add racing stripes for detail
         image: '/csr1.png',
-        imageScale: 1.35,
+        imageScale: 1.0,
     },
     race: {
         color: '#06b6d4',
@@ -42,7 +42,7 @@ const CAR_CONFIGS = {
         hideUnderbody: false,
         stripes: false,
         image: '/csr2.png',
-        imageScale: 1.35,
+        imageScale: 1.0,
     },
     buggy: {
         color: '#eab308',
@@ -60,7 +60,7 @@ const CAR_CONFIGS = {
         hideUnderbody: false,
         stripes: false,
         image: '/csr3.png',
-        imageScale: 1.35,
+        imageScale: 1.0,
     },
     arena: {
         color: '#d946ef',
@@ -78,7 +78,7 @@ const CAR_CONFIGS = {
         hideUnderbody: false,
         stripes: false,
         image: '/csr4.png',
-        imageScale: 1.35,
+        imageScale: 1.0,
     },
     construct: {
         color: '#f97316',
@@ -96,7 +96,7 @@ const CAR_CONFIGS = {
         hideUnderbody: false,
         stripes: false,
         image: '/csr5.png',
-        imageScale: 1.35,
+        imageScale: 1.0,
     },
     f1: {
         color: '#dc2626',
@@ -114,7 +114,7 @@ const CAR_CONFIGS = {
         hideUnderbody: false,
         stripes: false,
         image: '/csr6.png',
-        imageScale: 1.35,
+        imageScale: 1.0,
     },
 };
 
