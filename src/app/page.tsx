@@ -665,40 +665,79 @@ export default function Home() {
             </div>
 
             {/* 5. BOOK YOUR EVENT */}
-            <Section id="events" className="bg-transparent relative z-20">
+            <Section id="events" className="bg-transparent relative z-20 py-24">
                 <div className="container mx-auto px-4 md:px-6">
-                    <h2 className="text-5xl md:text-8xl font-black text-white mb-12 text-center tracking-tighter">
-                        BOOK YOUR <span className="text-green-500">EVENT</span>
-                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                        {/* Left Side: Mockup Image */}
+                        <motion.div
+                            initial={{ opacity: 0, x: -50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true, margin: "-100px" }}
+                            transition={{ duration: 0.8, ease: "easeOut" }}
+                            className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(220,38,38,0.15)] group bg-zinc-900"
+                        >
+                            <Image
+                                src="/booking.png"
+                                alt="Book Your Event Dashboard"
+                                fill
+                                className="object-cover z-10 opacity-90 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105"
+                            />
+                            {/* Overlay glow for deeper integration */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-20 pointer-events-none"></div>
+                        </motion.div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                        {/* Event Card 1 */}
-                        <div className="event-card opacity-0 translate-y-10 bg-zinc-900 border border-white/10 p-6 hover:border-green-500 transition-colors group cursor-pointer">
-                            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-green-400">PRIVATE PARTY</h3>
-                            <p className="text-sm text-white/50 mb-4">Exclusive track access for you and your friends.</p>
-                            <div className="h-1 w-12 bg-green-500/30 group-hover:bg-green-500 transition-colors"></div>
-                        </div>
+                        {/* Right Side: Content */}
+                        <motion.div
+                            initial={{ opacity: 0, x: 50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true, margin: "-100px" }}
+                            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+                            className="flex flex-col space-y-8"
+                        >
+                            <h2 className="text-4xl md:text-6xl font-black text-white leading-tight tracking-tighter">
+                                Own the Track for Events That Actually <span className="text-red-500 drop-shadow-[0_0_15px_rgba(220,38,38,0.5)]">Move</span>
+                            </h2>
+                            <p className="text-lg text-white/60 leading-relaxed max-w-lg">
+                                Forget boring venues. Turbo Shack transforms events into interactive racing experiences where guests compete, laugh, and drive together.
+                            </p>
 
-                        {/* Event Card 2 */}
-                        <div className="event-card opacity-0 translate-y-10 bg-zinc-900 border border-white/10 p-6 hover:border-green-500 transition-colors group cursor-pointer">
-                            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-green-400">CORPORATE RACE</h3>
-                            <p className="text-sm text-white/50 mb-4">Team building at 50mph. Trophies included.</p>
-                            <div className="h-1 w-12 bg-green-500/30 group-hover:bg-green-500 transition-colors"></div>
-                        </div>
+                            <div className="pt-4">
+                                <h4 className="text-sm font-bold text-green-500 uppercase tracking-widest mb-6 drop-shadow-[0_0_10px_rgba(34,197,94,0.4)]">Perfect for</h4>
+                                <ul className="space-y-4">
+                                    {[
+                                        "Corporate Events",
+                                        "Birthday Parties",
+                                        "Team Building",
+                                        "Kids Celebrations",
+                                        "Private Racing Nights"
+                                    ].map((item, idx) => (
+                                        <motion.li
+                                            key={idx}
+                                            initial={{ opacity: 0, y: 10 }}
+                                            whileInView={{ opacity: 1, y: 0 }}
+                                            viewport={{ once: true }}
+                                            transition={{ duration: 0.5, delay: 0.4 + (idx * 0.1) }}
+                                            className="flex items-center text-white/80 font-medium text-lg tracking-wide hover:text-white transition-colors"
+                                        >
+                                            <span className="h-2 w-2 bg-red-500 rounded-full mr-4 shadow-[0_0_10px_rgba(220,38,38,0.8)]"></span>
+                                            {item}
+                                        </motion.li>
+                                    ))}
+                                </ul>
+                            </div>
 
-                        {/* Event Card 3 */}
-                        <div className="event-card opacity-0 translate-y-10 bg-zinc-900 border border-white/10 p-6 hover:border-green-500 transition-colors group cursor-pointer">
-                            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-green-400">CHAMPIONSHIP</h3>
-                            <p className="text-sm text-white/50 mb-4">Join the official seasonal league.</p>
-                            <div className="h-1 w-12 bg-green-500/30 group-hover:bg-green-500 transition-colors"></div>
-                        </div>
-
-                        {/* Event Card 4 */}
-                        <div className="event-card opacity-0 translate-y-10 bg-zinc-900 border border-white/10 p-6 hover:border-green-500 transition-colors group cursor-pointer">
-                            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-green-400">CUSTOM TRACK</h3>
-                            <p className="text-sm text-white/50 mb-4">Design your own layout for a special event.</p>
-                            <div className="h-1 w-12 bg-green-500/30 group-hover:bg-green-500 transition-colors"></div>
-                        </div>
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.5, delay: 0.9 }}
+                                className="pt-6"
+                            >
+                                <button className="px-10 py-4 bg-red-600 hover:bg-red-700 text-white font-bold uppercase tracking-widest rounded transition-colors shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:shadow-[0_0_30px_rgba(220,38,38,0.6)]">
+                                    Check Availability
+                                </button>
+                            </motion.div>
+                        </motion.div>
                     </div>
                 </div>
             </Section>
