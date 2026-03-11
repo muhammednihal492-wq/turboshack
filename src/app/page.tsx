@@ -14,180 +14,125 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Car options for the showcase
 const SHOWCASE_CARS = [
-    { id: '1', name: 'OFF-ROAD BEAST', type: 'Titan 4x4', img: '/csr1.png', speed: 'MAX', diff: 'HARD' },
-    { id: '2', name: 'DRIFT KING', type: 'Apex R-Spec', img: '/csr2.png', speed: 'HIGH', diff: 'EASY' },
-    { id: '3', name: 'DUNE BUGGY', type: 'Sandstorm V2', img: '/csr3.png', speed: 'HIGH', diff: 'MED' },
-    { id: '4', name: 'ARENA WARRIOR', type: 'Mecha-Drift', img: '/csr4.png', speed: 'MED', diff: 'MED' },
+    { id: '1', name: 'TURBOSHACK CIRCUIT ZONE', type: 'Grip. Apex. Speed.', img: '/csr1.png', speed: 'MAX', diff: 'HARD' },
+    { id: '2', name: '"WHAT ROAD?" ZONE', type: 'Defy gravity.', img: '/csr2.png', speed: 'HIGH', diff: 'EASY' },
+    { id: '3', name: 'BUILD SOCIETY', type: 'Dig. Lift. Build. Relax.', img: '/csr3.png', speed: 'HIGH', diff: 'MED' },
+    { id: '4', name: 'BUGGY WARRIOR', type: 'Mecha-Drift', img: '/csr4.png', speed: 'MED', diff: 'MED' },
 ];
 
-function RotatingShowcaseCar({ carId }: { carId: string }) {
+function InteractiveShowcaseCard({ carId }: { carId: string }) {
     const car = SHOWCASE_CARS.find(c => c.id === carId) || SHOWCASE_CARS[0];
-    const rotation = useMotionValue(0);
-    const speed = useMotionValue(0);
-    const isDragging = useRef(false);
-    const lastX = useRef(0);
-    const [assembled, setAssembled] = useState(false);
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
 
-    useEffect(() => {
-        setAssembled(false); // reset on car change
-        rotation.set(0); // reset rotation
-        speed.set(0);
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const calcX = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
+        const calcY = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
+        x.set(calcX);
+        y.set(calcY);
+    };
 
-        // Wait for 1.4s assembly + 1.5s front-facing hero hold before rotating
-        const t1 = setTimeout(() => {
-            setAssembled(true);
-        }, 1400);
+    const handleMouseLeave = () => {
+        x.set(0);
+        y.set(0);
+    };
 
-        const t2 = setTimeout(() => {
-            speed.set(0.55); // ~11s per full rotation at 60fps
-        }, 2900); // 1.4 + 1.5
+    // Smooth scaling for 3D tilt
+    const rotateX = useTransform(y, [-1, 1], [15, -15]);
+    const rotateY = useTransform(x, [-1, 1], [-15, 15]);
 
-        return () => {
-            clearTimeout(t1);
-            clearTimeout(t2);
-        };
-    }, [carId]);
-
-    useAnimationFrame((t, delta) => {
-        if (!isDragging.current) {
-            rotation.set(rotation.get() + speed.get() * (delta / 16.66));
-        }
+    const idleRotation = useMotionValue(0);
+    useAnimationFrame((t) => {
+        idleRotation.set(Math.sin(t / 1000) * 8); // slowly rotate left and right
     });
+
+    // Mock Specs since original object didn't have year/mileage/hp
+    const Specs = {
+        '1': { price: '$499', year: '2026', mileage: 'NEW', hp: '2.5 HP' },
+        '2': { price: '$549', year: '2026', mileage: 'NEW', hp: '3.1 HP' },
+        '3': { price: '$399', year: '2025', mileage: 'NEW', hp: '1.8 HP' },
+        '4': { price: '$449', year: '2026', mileage: 'NEW', hp: '2.2 HP' },
+    }[carId] || { price: '$499', year: '2026', mileage: 'NEW', hp: '2.0 HP' };
 
     return (
         <motion.div
-            className="w-full h-full relative cursor-grab active:cursor-grabbing pb-8"
-            style={{
-                rotate: rotation
+            className="w-full max-w-[400px] aspect-[4/5] relative rounded-3xl"
+            style={{ perspective: 1200 }}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            variants={{
+                hidden: { opacity: 0, scale: 0.9 },
+                visible: { opacity: 1, scale: 1, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.15 } }
             }}
-            onPointerDown={(e) => {
-                if (!assembled) return;
-                isDragging.current = true;
-                lastX.current = e.clientX;
-            }}
-            onPointerMove={(e) => {
-                if (isDragging.current) {
-                    const deltaX = e.clientX - lastX.current;
-                    rotation.set(rotation.get() + deltaX * 0.5); // scrub sensitivity
-                    lastX.current = e.clientX;
-                }
-            }}
-            onPointerUp={() => {
-                isDragging.current = false;
-            }}
-            onPointerLeave={() => {
-                isDragging.current = false;
-            }}
+            key={carId}
         >
-            {/* The assembled full car */}
             <motion.div
-                className="absolute inset-0 z-20 pointer-events-none flex items-center justify-center p-8"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: assembled ? 1 : 0 }}
-                transition={{ duration: 0.1 }}
+                className="w-full h-full rounded-3xl p-8 flex flex-col justify-between border border-white/20 bg-white/5 backdrop-blur-2xl shadow-[0_30px_60px_rgba(0,0,0,0.6)] overflow-hidden relative group"
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
                 style={{
-                    filter: "drop-shadow(0px 40px 40px rgba(0,0,0,1)) drop-shadow(0px -10px 20px rgba(122,0,0,0.5)) drop-shadow(0px 15px 15px rgba(255,255,255,0.05))"
+                    rotateX,
+                    rotateY,
+                    transformStyle: "preserve-3d",
                 }}
             >
-                <div className="relative w-full h-[80%] hover:scale-110 transition-transform duration-500 ease-out">
-                    <Image
-                        src={car.img}
-                        alt="Showcase Car"
-                        fill
-                        className="object-contain pointer-events-none drop-shadow-2xl"
-                        draggable={false}
-                        priority
-                    />
-                </div>
-            </motion.div>
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
+                <div className="absolute -inset-20 bg-red-600/20 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
-            {/* Realistic Mechanical Parts Assembly */}
-            <AnimatePresence>
-                {!assembled && (
+                <div className="flex justify-between items-start z-10" style={{ transform: "translateZ(30px)" }}>
+                    <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}>
+                        <h3 className="text-3xl font-black text-white uppercase tracking-tighter drop-shadow-md">{car.name}</h3>
+                        <p className="text-white/60 font-mono text-sm tracking-widest mt-1">{car.type}</p>
+                    </motion.div>
+                    <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}>
+                        <span className="text-xl font-bold text-red-500 drop-shadow-[0_0_10px_rgba(220,38,38,0.5)]">{Specs.price}</span>
+                    </motion.div>
+                </div>
+
+                <motion.div
+                    className="flex-1 w-full relative flex items-center justify-center pointer-events-none my-6"
+                    style={{ transform: "translateZ(80px)" }}
+                >
                     <motion.div
-                        key="mechanical-parts"
-                        className="absolute inset-0 z-10 pointer-events-none p-8"
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        style={{
-                            filter: "drop-shadow(0px 40px 40px rgba(0,0,0,0.95)) drop-shadow(0px -10px 20px rgba(122,0,0,0.7)) drop-shadow(0px 15px 15px rgba(255,255,255,0.12))"
+                        className="w-[130%] h-[130%] relative group-hover:scale-110 group-hover:drop-shadow-[0_40px_40px_rgba(0,0,0,0.9)] transition-transform duration-700 ease-out"
+                        style={{ rotate: idleRotation }}
+                        variants={{
+                            hidden: { opacity: 0, x: -80, filter: "blur(10px)" }, // slide from left with blur
+                            visible: { opacity: 1, x: 0, filter: "blur(0px)", transition: { duration: 0.8, ease: "easeOut" } }
                         }}
                     >
-                        {/* Overall Settle & Weight Wrapper (triggers at the end of the 1.4s sequence) */}
-                        <motion.div
-                            className="absolute inset-0"
-                            initial={{ y: 0, scaleY: 1 }}
-                            animate={{ y: [0, 0, 4, 0], scaleY: [1, 1, 0.98, 1] }}
-                            transition={{ duration: 1.4, times: [0, 0.81, 0.85, 1], ease: "easeInOut" }}
-                        >
-                            {/* 1. Base / Chassis Reveal (Center Ground) */}
-                            <motion.div
-                                className="absolute inset-0"
-                                initial={{ opacity: 0, scale: 0.98, y: 5 }}
-                                animate={{ opacity: 1, scale: 1, y: [5, 0, 0] }}
-                                transition={{ duration: 0.3, ease: "easeOut", times: [0, 1, 1] }}
-                                style={{ clipPath: 'polygon(30% 20%, 70% 20%, 70% 80%, 30% 80%)' }}
-                            >
-                                <div className="relative w-full h-[80%] my-auto mx-auto top-[10%]">
-                                    <Image src={car.img} alt="Chassis" fill className="object-contain" priority />
-                                </div>
-                            </motion.div>
-
-                            {/* 2. Left Wheels (Front & Rear sequential roll-in) */}
-                            <motion.div
-                                className="absolute inset-0"
-                                initial={{ x: -100, opacity: 0 }}
-                                animate={{ x: [-100, 2, 0], opacity: [0, 1, 1] }}
-                                transition={{ duration: 0.3, ease: "easeInOut", delay: 0.2, times: [0, 0.9, 1] }}
-                                style={{ clipPath: 'polygon(0% 20%, 30% 20%, 30% 100%, 0% 100%)' }}
-                            >
-                                <div className="relative w-full h-[80%] my-auto mx-auto top-[10%]">
-                                    <Image src={car.img} alt="Left Wheels" fill className="object-contain" priority />
-                                </div>
-                            </motion.div>
-
-                            {/* 2. Right Wheels */}
-                            <motion.div
-                                className="absolute inset-0"
-                                initial={{ x: 100, opacity: 0 }}
-                                animate={{ x: [100, -2, 0], opacity: [0, 1, 1] }}
-                                transition={{ duration: 0.3, ease: "easeInOut", delay: 0.3, times: [0, 0.9, 1] }}
-                                style={{ clipPath: 'polygon(70% 20%, 100% 20%, 100% 100%, 70% 100%)' }}
-                            >
-                                <div className="relative w-full h-[80%] my-auto mx-auto top-[10%]">
-                                    <Image src={car.img} alt="Right Wheels" fill className="object-contain" priority />
-                                </div>
-                            </motion.div>
-
-                            {/* 3. Suspension Lowering */}
-                            <motion.div
-                                className="absolute inset-0"
-                                initial={{ y: -50, opacity: 0 }}
-                                animate={{ y: [-50, 2, 0], opacity: [0, 1, 1] }}
-                                transition={{ duration: 0.3, ease: "easeInOut", delay: 0.6, times: [0, 0.9, 1] }}
-                                style={{ clipPath: 'polygon(30% 80%, 70% 80%, 70% 100%, 30% 100%)' }}
-                            >
-                                <div className="relative w-full h-[80%] my-auto mx-auto top-[10%]">
-                                    <Image src={car.img} alt="Suspension" fill className="object-contain" priority />
-                                </div>
-                            </motion.div>
-
-                            {/* 3. Body Shell Descends */}
-                            <motion.div
-                                className="absolute inset-0"
-                                initial={{ y: -150, opacity: 0 }}
-                                animate={{ y: [-150, 3, 0], opacity: [0, 1, 1] }}
-                                transition={{ duration: 0.4, ease: "easeInOut", delay: 0.8, times: [0, 0.9, 1] }}
-                                style={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 20%, 0% 20%)' }}
-                            >
-                                <div className="relative w-full h-[80%] my-auto mx-auto top-[10%]">
-                                    <Image src={car.img} alt="Body Shell" fill className="object-contain" priority />
-                                </div>
-                            </motion.div>
-                        </motion.div>
+                        <Image
+                            src={car.img}
+                            alt={car.name}
+                            fill
+                            className="object-contain drop-shadow-[0_30px_30px_rgba(0,0,0,0.8)]"
+                            priority
+                        />
                     </motion.div>
-                )}
-            </AnimatePresence>
+                    <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-[70%] h-8 bg-black blur-[15px] rounded-[100%] opacity-0 group-hover:opacity-60 transition-opacity duration-700" />
+                </motion.div>
+
+                <motion.div
+                    className="grid grid-cols-3 gap-2 border-t border-white/10 pt-6 z-10"
+                    style={{ transform: "translateZ(40px)" }}
+                    variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}
+                >
+                    <div className="flex flex-col text-center">
+                        <span className="text-[10px] text-white/40 uppercase tracking-widest font-mono">Year</span>
+                        <span className="text-sm font-bold text-white mt-1">{Specs.year}</span>
+                    </div>
+                    <div className="flex flex-col text-center border-l border-r border-white/10">
+                        <span className="text-[10px] text-white/40 uppercase tracking-widest font-mono">Mileage</span>
+                        <span className="text-sm font-bold text-white mt-1">{Specs.mileage}</span>
+                    </div>
+                    <div className="flex flex-col text-center">
+                        <span className="text-[10px] text-white/40 uppercase tracking-widest font-mono">Power</span>
+                        <span className="text-sm font-bold text-white mt-1">{Specs.hp}</span>
+                    </div>
+                </motion.div>
+            </motion.div>
         </motion.div>
     );
 }
@@ -437,13 +382,13 @@ export default function Home() {
     return (
         <main className="relative bg-black text-white min-h-[600vh] overflow-x-hidden font-sans selection:bg-red-600 selection:text-black">
 
-            {/* Fixed Navbar Background (Only appears after intro) */}
-            <div className="fixed top-0 left-0 w-full h-20 md:h-24 bg-gradient-to-b from-black/80 to-transparent z-40 pointer-events-none" />
+            {/* Navbar Background (Only appears after intro) */}
+            <div className="absolute top-0 left-0 w-full h-20 md:h-24 bg-gradient-to-b from-black/80 to-transparent z-40 pointer-events-none" />
 
             {/* Navigation */}
             <nav
                 ref={navRef}
-                className="fixed top-0 right-0 p-4 md:p-8 z-50 opacity-0"
+                className="absolute top-0 right-0 p-4 md:p-8 z-50 opacity-0"
             >
                 <ul className="flex space-x-4 md:space-x-8 text-xs md:text-sm uppercase tracking-widest font-bold text-white/80">
                     <li className="hover:text-red-600 cursor-pointer transition-colors" onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}>About</li>
@@ -500,14 +445,14 @@ export default function Home() {
                 {/* Hero Quotes */}
                 <div className="hero-text-container absolute top-[65%] md:top-1/2 right-[5%] md:right-[5%] -translate-y-1/2 w-[90%] md:w-[35%] flex flex-col gap-8 md:gap-12 z-20 pointer-events-none px-4 md:px-0 drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)] items-end text-right">
                     <div className="quote-item opacity-0 translate-x-12">
-                        <p className="text-3xl md:text-5xl font-black text-white italic tracking-tighter uppercase relative leading-none">
+                        <p className="text-2xl md:text-3xl font-black text-white italic tracking-tighter uppercase relative leading-none">
                             <span className="text-red-600 text-6xl absolute -right-8 -top-4 font-sans drop-shadow-[0_0_15px_rgba(220,38,38,0.8)]">"</span>
-                            Not just a toy.<br />A precision machine.
+                            The next generation of<br />indoor driving is here.
                         </p>
                     </div>
                     <div className="quote-item opacity-0 translate-x-12 w-full">
                         <p className="text-base md:text-xl font-light text-white font-mono border-r-4 border-red-600 pr-6 py-2 leading-relaxed bg-black/40 backdrop-blur-sm rounded-l-lg justify-end text-right">
-                            "Built for the track. Engineered for pure speed and absolute adrenaline."
+                            "A premium, dynamically engineered RC arena. Built for speed, precision and total immersion."
                         </p>
                     </div>
                 </div>
@@ -515,8 +460,10 @@ export default function Home() {
 
             {/* 2. INTERACTIVE SHOWCASE */}
             <Section id="showcase" className="relative w-full min-h-screen bg-black overflow-hidden flex items-center z-10 pt-20">
+                {/* Showcase Background Image Removed */}
+
                 {/* Showcase Background Glow */}
-                <div className="absolute top-0 right-0 w-1/2 h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#7A0000]/20 via-black to-black pointer-events-none mix-blend-screen overflow-hidden">
+                <div className="absolute top-0 right-0 w-1/2 h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#7A0000]/20 via-transparent to-transparent pointer-events-none mix-blend-screen overflow-hidden z-0">
                     {/* Add faint particle dust or noise here if needed via CSS later, keeping minimal for performance */}
                 </div>
 
@@ -526,9 +473,9 @@ export default function Home() {
                     <div className="flex flex-col space-y-8">
                         <div>
                             <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-4">
-                                SELECT YOUR <br /> <span className="text-red-600 drop-shadow-[0_0_15px_rgba(220,38,38,0.5)]">CHAMPION</span>
+                                SELECT YOUR <br /> <span className="text-red-600 drop-shadow-[0_0_15px_rgba(220,38,38,0.5)]">ZONES</span>
                             </h2>
-                            <p className="text-white/60 font-mono text-lg mb-8">Choose your vehicle. Command the track.</p>
+                            <p className="text-white/60 font-mono text-lg mb-8">Choose your environment. Command the track.</p>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
@@ -575,60 +522,7 @@ export default function Home() {
                         {/* Soft Vignette Overlay to focus attention */}
                         <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.9)_100%)] pointer-events-none mix-blend-multiply"></div>
                         <AnimatePresence mode="wait">
-                            <motion.div
-                                key={selectedCar}
-                                className="absolute inset-0 flex items-center justify-center pt-12 md:pt-20"
-                                // Cinematic Assembly Camera Push
-                                initial={{ opacity: 0, scale: 0.85 }}
-                                animate={{
-                                    opacity: 1,
-                                    scale: [0.85, 1],
-                                    filter: ["blur(5px)", "blur(0px)"]
-                                }}
-                                exit={{
-                                    opacity: 0,
-                                    scale: 1.05,
-                                    filter: "blur(5px)"
-                                }}
-                                transition={{
-                                    duration: 1.4,
-                                    ease: "easeOut"
-                                }}
-                            >
-                                {/* Subtle Red Light Streak Passing Behind */}
-                                <motion.div
-                                    className="absolute top-1/2 left-0 w-[200%] h-1 bg-red-500/80 shadow-[0_0_30px_15px_rgba(220,38,38,0.7)] mix-blend-screen pointer-events-none"
-                                    initial={{ opacity: 0, scaleY: 0 }}
-                                    animate={{ opacity: [0, 1, 0], scaleY: [0, 1, 0] }}
-                                    transition={{ duration: 1.4, ease: "circOut", delay: 0.1 }}
-                                />
-
-                                {/* Floor Reflection (Deep ambient red underglow) */}
-                                <motion.div
-                                    className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-[70%] h-16 bg-[#7A0000]/40 blur-[30px] rounded-[100%] pointer-events-none mix-blend-lighten"
-                                    initial={{ opacity: 0, scale: 0 }}
-                                    animate={{ opacity: [0, 0.4, 0.7], scale: [0.8, 1.2, 1.1] }}
-                                    transition={{ duration: 1.4, times: [0, 0.45, 1] }}
-                                />
-
-                                {/* Dynamic Shadow Under Car (Enhanced studio falloff) */}
-                                <motion.div
-                                    className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-[80%] h-20 bg-black blur-[20px] rounded-[100%] pointer-events-none"
-                                    initial={{ opacity: 0, scale: 0 }}
-                                    animate={{ opacity: [0, 0.9, 1], scale: [0.8, 1.2, 1] }}
-                                    transition={{ duration: 1.4, times: [0, 0.45, 1] }}
-                                />
-
-
-
-                                {/* The Car Image with Continuous 360 Rotation Showcase */}
-                                <motion.div
-                                    className="relative w-full max-w-[500px] aspect-square z-10"
-                                >
-                                    {/* 360° Continuous Interactive Rotation Wrapper */}
-                                    <RotatingShowcaseCar carId={selectedCar} />
-                                </motion.div>
-                            </motion.div>
+                            <InteractiveShowcaseCard key={selectedCar} carId={selectedCar} />
                         </AnimatePresence>
                     </div>
 
@@ -647,11 +541,12 @@ export default function Home() {
                 <div className="relative max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-16 p-4 md:p-8 z-10">
                     {/* Left: Text */}
                     <div className="md:w-1/2 space-y-10 text-left pl-4 md:pl-12 border-l-2 border-red-600/50">
-                        <h2 className="about-text-element text-4xl md:text-7xl font-black uppercase text-white tracking-tighter opacity-0 translate-y-10">
-                            Engineering <br /> <span className="text-red-600 drop-shadow-[0_0_15px_rgba(220,38,38,0.5)]">Supremacy</span>
+                        <h2 className="about-text-element text-3xl md:text-5xl lg:text-6xl font-black uppercase text-white tracking-tighter opacity-0 translate-y-10">
+                            Compact.<br /> <span className="text-red-600 drop-shadow-[0_0_15px_rgba(220,38,38,0.5)]">Engineered.</span><br />
+                            Maximum Fun.
                         </h2>
                         <p className="about-text-element text-lg md:text-2xl text-white/70 leading-relaxed font-light font-mono opacity-0 translate-y-10">
-                            We don't just build RC cars. We forge raw adrenaline. Every chassis, every motor, and every aerodynamic curve is meticulously engineered to bring professional motorsport intensity straight to the palm of your hand.
+                            Every track element, obstacle, and layout decision is designed to maximize excitement while using space intelligently. The result is a high-energy arena packed with driving possibilities. Turbo Shack was built around one powerful idea: Small footprint, Massive experience.
                         </p>
                         <div className="about-text-element inline-block border border-red-600/30 px-8 py-4 text-red-500 font-mono text-sm tracking-widest uppercase bg-red-900/10 backdrop-blur-sm opacity-0 translate-y-10 shadow-[0_0_20px_rgba(220,38,38,0.1)]">
                             EST. 2026 // UNRIVALED PERFORMANCE
@@ -667,10 +562,10 @@ export default function Home() {
                             {/* Realistic Car Image with Hover Floating */}
                             <div className="relative w-full h-full z-10 group-hover:-translate-y-4 group-hover:scale-105 transition-all duration-[2000ms] ease-out">
                                 <Image
-                                    src="/csr2.png" // Using one of the provided sleek car images
+                                    src="/off1.png"
                                     alt="Professional RC Car Detail"
                                     fill
-                                    className="object-contain drop-shadow-[0_20px_30px_rgba(0,0,0,0.8)]"
+                                    className="object-cover"
                                 />
                             </div>
                         </div>
@@ -679,7 +574,9 @@ export default function Home() {
             </Section>
 
             {/* 4. ARENA / EVENTS */}
-            <div className="relative w-full overflow-hidden">
+            <div className="relative w-full overflow-hidden py-16">
+                {/* Arena Background Image Removed */}
+
                 <Section id="arena" className="bg-transparent text-left relative z-10">
                     <div className="container mx-auto px-4 md:px-6">
                         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
@@ -696,12 +593,11 @@ export default function Home() {
                             {/* Right Side: Cards */}
                             <div className="md:w-2/3 grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
                                 {/* Card 1: Book Your Slot */}
-                                <div className="arena-card opacity-0 translate-y-10 bg-zinc-900/80 border border-purple-500/50 p-6 rounded-xl backdrop-blur-md hover:scale-105 transition-transform cursor-pointer group">
-                                    <div className="h-32 mb-4 bg-purple-500/20 rounded-lg flex items-center justify-center overflow-hidden relative">
-                                        <div className="absolute inset-0 bg-purple-500/20 animate-pulse"></div>
-                                        <span className="text-4xl relative z-10">🏁</span>
+                                <div onClick={() => alert("Reservation system opening soon...")} className="arena-card opacity-0 translate-y-10 bg-zinc-900/80 border border-purple-500/50 p-6 rounded-xl backdrop-blur-md hover:scale-105 transition-transform cursor-pointer group">
+                                    <div className="h-32 mb-4 bg-zinc-800 rounded-lg flex items-center justify-center overflow-hidden relative">
+                                        <Image src="/electroniccity.png" alt="Electronic City Arena" fill className="object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
                                     </div>
-                                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">BOOK YOUR SLOT</h3>
+                                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">PRE BOOK</h3>
                                     <p className="text-xs text-white/50 mb-4">Secure your place in the next global tournament.</p>
                                     <button className="w-full py-2 bg-purple-600 text-white font-bold text-xs uppercase tracking-widest hover:bg-purple-700 transition-colors rounded">
                                         Reserve Now
@@ -710,8 +606,9 @@ export default function Home() {
 
                                 {/* Card 2: Coming Soon */}
                                 <div className="arena-card opacity-0 translate-y-10 bg-zinc-900/50 border border-white/10 p-6 rounded-xl backdrop-blur-sm grayscale opacity-70 hover:opacity-100 transition-opacity">
-                                    <div className="h-32 mb-4 bg-white/5 rounded-lg flex items-center justify-center">
-                                        <span className="text-4xl">🔒</span>
+                                    <div className="h-32 mb-4 bg-zinc-800 rounded-lg flex items-center justify-center overflow-hidden relative">
+                                        <Image src="/airport.png" alt="Airport Arena" fill className="object-cover opacity-50 group-hover:opacity-80 transition-opacity" />
+                                        <span className="text-4xl relative z-10 drop-shadow-lg">🔒</span>
                                     </div>
                                     <h3 className="text-xl font-bold text-white mb-2">Coming Soon</h3>
                                     <p className="text-xs text-white/50 mb-4">Global rankings and stats.</p>
@@ -722,8 +619,9 @@ export default function Home() {
 
                                 {/* Card 3: Coming Soon */}
                                 <div className="arena-card opacity-0 translate-y-10 bg-zinc-900/50 border border-white/10 p-6 rounded-xl backdrop-blur-sm grayscale opacity-70 hover:opacity-100 transition-opacity">
-                                    <div className="h-32 mb-4 bg-white/5 rounded-lg flex items-center justify-center">
-                                        <span className="text-4xl">🔒</span>
+                                    <div className="h-32 mb-4 bg-zinc-800 rounded-lg flex items-center justify-center overflow-hidden relative">
+                                        <Image src="/highway.png" alt="Highway Arena" fill className="object-cover opacity-50 group-hover:opacity-80 transition-opacity" />
+                                        <span className="text-4xl relative z-10 drop-shadow-lg">🔒</span>
                                     </div>
                                     <h3 className="text-xl font-bold text-white mb-2">Coming Soon</h3>
                                     <p className="text-xs text-white/50 mb-4">Live streaming integration.</p>
@@ -733,6 +631,35 @@ export default function Home() {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Signature Events (New Addition) */}
+                        <div className="mt-16 border-t border-white/10 pt-10 flex flex-col items-center">
+                            <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter uppercase mb-6 drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] text-center">
+                                SIGNATURE <span className="text-red-600">EVENTS</span>
+                            </h3>
+
+                            {/* Staggered Event List */}
+                            <div className="flex flex-wrap justify-center gap-4 md:gap-6">
+                                {[
+                                    "TIME ATTACK",
+                                    "TREASURE HUNT",
+                                    "HIT THE LOOP",
+                                    "PERFECT LAP",
+                                    "KIDS CIRCUIT",
+                                    "AND MANY MORE..."
+                                ].map((event, i) => (
+                                    <div
+                                        key={event}
+                                        className="bg-black/40 border border-white/10 backdrop-blur-md px-6 py-3 rounded-full hover:border-red-600/50 hover:bg-red-900/10 hover:shadow-[0_0_15px_rgba(220,38,38,0.2)] transition-all cursor-default"
+                                    >
+                                        <span className="text-sm md:text-base font-bold text-white tracking-widest uppercase">
+                                            {event}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
                     </div>
                 </Section>
             </div>
@@ -782,11 +709,11 @@ export default function Home() {
                     <div className="flex flex-col md:flex-row items-center justify-between gap-12">
                         {/* Left Side: Title */}
                         <div className="md:w-1/3 text-left">
-                            <h2 className="text-5xl md:text-8xl font-black text-white mb-6 tracking-tighter">
-                                THE <span className="text-blue-500">STORE</span>
+                            <h2 className="text-4xl md:text-7xl font-black text-white mb-6 tracking-tighter">
+                                THE TURBO SHACK <br /><span className="text-blue-500">ECOSYSTEM</span>
                             </h2>
                             <p className="text-white/60 font-mono text-sm md:text-base mb-8">
-                                Upgrade your ride. Build your dream.
+                                Gear Up. Build Out.
                             </p>
                             <button className="px-8 py-4 bg-white text-black font-bold uppercase tracking-widest hover:bg-blue-500 hover:text-white transition-colors">
                                 Shop All Actions
@@ -794,35 +721,25 @@ export default function Home() {
                         </div>
 
                         {/* Right Side: Category Blocks */}
-                        <div className="md:w-2/3 grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-                            {/* Category 1: 3D Printed Parts */}
-                            <div className="store-card opacity-0 translate-y-10 bg-zinc-900/80 border border-white/10 p-8 rounded-2xl hover:border-blue-500 transition-all cursor-pointer group relative overflow-hidden">
+                        <div className="md:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                            {/* Category 1: 3D Studio */}
+                            <div onClick={() => alert("Entering 3D Studio...")} className="store-card opacity-0 translate-y-10 bg-zinc-900/80 border border-white/10 p-8 rounded-2xl hover:border-blue-500 transition-all cursor-pointer group relative overflow-hidden">
                                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                                     <span className="text-6xl">⚙️</span>
                                 </div>
-                                <h3 className="text-2xl font-bold text-white mb-2 relative z-10">3D PRINTED PARTS</h3>
-                                <p className="text-sm text-white/50 mb-6 relative z-10">Custom chassis, suspension arms, and body kits.</p>
+                                <h3 className="text-2xl font-bold text-white mb-2 relative z-10">3D STUDIO</h3>
+                                <p className="text-sm text-white/50 mb-6 relative z-10">Collector-grade precision. Custom 3D-printed figures, scale models, and industrial-level prototypes.</p>
                                 <span className="text-blue-500 text-xs font-bold uppercase tracking-widest group-hover:underline">View Parts &rarr;</span>
                             </div>
 
-                            {/* Category 2: Toys */}
-                            <div className="store-card opacity-0 translate-y-10 bg-zinc-900/80 border border-white/10 p-8 rounded-2xl hover:border-blue-500 transition-all cursor-pointer group relative overflow-hidden">
+                            {/* Category 2: The Pro Shop */}
+                            <div onClick={() => alert("Entering The Pro Shop...")} className="store-card opacity-0 translate-y-10 bg-zinc-900/80 border border-white/10 p-8 rounded-2xl hover:border-blue-500 transition-all cursor-pointer group relative overflow-hidden">
                                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                    <span className="text-6xl">🎮</span>
+                                    <span className="text-6xl">🏎️</span>
                                 </div>
-                                <h3 className="text-2xl font-bold text-white mb-2 relative z-10">TOYS</h3>
-                                <p className="text-sm text-white/50 mb-6 relative z-10">Ready-to-Run electric and nitro RC cars.</p>
-                                <span className="text-blue-500 text-xs font-bold uppercase tracking-widest group-hover:underline">Browse Toys &rarr;</span>
-                            </div>
-
-                            {/* Category 3: Toy Store */}
-                            <div className="store-card opacity-0 translate-y-10 bg-zinc-900/80 border border-white/10 p-8 rounded-2xl hover:border-blue-500 transition-all cursor-pointer group relative overflow-hidden">
-                                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                    <span className="text-6xl">🏬</span>
-                                </div>
-                                <h3 className="text-2xl font-bold text-white mb-2 relative z-10">TOY STORE</h3>
-                                <p className="text-sm text-white/50 mb-6 relative z-10">Complete sets, tracks, and starter kits.</p>
-                                <span className="text-blue-500 text-xs font-bold uppercase tracking-widest group-hover:underline">Visit Store &rarr;</span>
+                                <h3 className="text-2xl font-bold text-white mb-2 relative z-10">THE PRO SHOP</h3>
+                                <p className="text-sm text-white/50 mb-6 relative z-10">Driven by performance. Premium RC machines, essential upgrades, spare parts, and pro accessories.</p>
+                                <span className="text-blue-500 text-xs font-bold uppercase tracking-widest group-hover:underline">Browse Pro Shop &rarr;</span>
                             </div>
                         </div>
                     </div>

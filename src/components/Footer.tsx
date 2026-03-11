@@ -75,10 +75,20 @@ export default function Footer() {
 
                 {/* Bottom Row */}
                 <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-6">
-                    <p className="text-xs font-light text-white/50">
+                    <p className="text-xs font-light text-white/50 flex-1">
                         © 2026 Turbo Shack. All Rights Reserved.
                     </p>
-                    <div className="flex items-center space-x-4 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300">
+                    <div className="flex-1 flex justify-center">
+                        <a href="https://www.instagram.com/intellex.web?igsh=MXc4Z2Uwd243OHpqdA%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs font-bold text-white/70 hover:text-white transition-colors duration-300 uppercase tracking-widest text-center">
+                            Meet the Developers
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 mb-[2px]">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                            </svg>
+                        </a>
+                    </div>
+                    <div className="flex items-center justify-end flex-1 space-x-4 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300 flex-wrap gap-y-2">
                         {/* Fake Payment Icons using text/emoji for simplicity, but visually distinct */}
                         <div className="text-xs font-bold border border-white/20 px-2 py-1 rounded">VISA</div>
                         <div className="text-xs font-bold border border-white/20 px-2 py-1 rounded">MC</div>
