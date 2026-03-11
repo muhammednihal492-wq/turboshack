@@ -88,14 +88,14 @@ export default function Footer() {
                             </svg>
                         </a>
                     </div>
-                    <div className="flex items-center justify-end flex-1 space-x-4 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300 flex-wrap gap-y-2">
+                    <div className="flex items-center justify-center md:justify-end flex-1 gap-1 md:gap-2 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300 flex-wrap sm:flex-nowrap">
                         {/* Fake Payment Icons using text/emoji for simplicity, but visually distinct */}
-                        <div className="text-xs font-bold border border-white/20 px-2 py-1 rounded">VISA</div>
-                        <div className="text-xs font-bold border border-white/20 px-2 py-1 rounded">MC</div>
-                        <div className="text-xs font-bold border border-white/20 px-2 py-1 rounded">MAESTRO</div>
-                        <div className="text-xs font-bold border border-white/20 px-2 py-1 rounded">AMEX</div>
-                        <div className="text-xs font-bold border border-white/20 px-2 py-1 rounded">DISCOVER</div>
-                        <div className="text-xs font-bold border border-white/20 px-2 py-1 rounded">GPay</div>
+                        <div className="text-[9px] md:text-xs font-bold border border-white/20 px-1.5 md:px-2 py-1 rounded whitespace-nowrap">VISA</div>
+                        <div className="text-[9px] md:text-xs font-bold border border-white/20 px-1.5 md:px-2 py-1 rounded whitespace-nowrap">MC</div>
+                        <div className="text-[9px] md:text-xs font-bold border border-white/20 px-1.5 md:px-2 py-1 rounded whitespace-nowrap">MAESTRO</div>
+                        <div className="text-[9px] md:text-xs font-bold border border-white/20 px-1.5 md:px-2 py-1 rounded whitespace-nowrap">AMEX</div>
+                        <div className="text-[9px] md:text-xs font-bold border border-white/20 px-1.5 md:px-2 py-1 rounded whitespace-nowrap">DISCOVER</div>
+                        <div className="text-[9px] md:text-xs font-bold border border-white/20 px-1.5 md:px-2 py-1 rounded whitespace-nowrap">GPay</div>
                     </div>
                 </div>
             </div>
