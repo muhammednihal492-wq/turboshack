@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import Section from '@/components/Section';
 import CarVisual from '@/components/CarVisual';
-import Footer from '@/components/Footer';
+
 import { motion, AnimatePresence, useMotionValue, useAnimationFrame, useTransform } from 'framer-motion';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
@@ -17,7 +17,7 @@ const SHOWCASE_CARS = [
     { id: '1', name: 'TURBOSHACK CIRCUIT ZONE', type: 'Grip. Apex. Speed.', img: '/csr1.png', speed: 'MAX', diff: 'HARD' },
     { id: '2', name: '"WHAT ROAD?" ZONE', type: 'Defy gravity.', img: '/csr2.png', speed: 'HIGH', diff: 'EASY' },
     { id: '3', name: 'BUILD SOCIETY', type: 'Dig. Lift. Build. Relax.', img: '/csr3.png', speed: 'HIGH', diff: 'MED' },
-    { id: '4', name: 'BUGGY WARRIOR', type: 'Mecha-Drift', img: '/csr4.png', speed: 'MED', diff: 'MED' },
+    { id: '4', name: 'BUGGY WARRIOR', type: 'The Ultimate Adventure in the Desert: Dune Buggy Dubai - Travel Saga Tourism', img: '/csr4.png', speed: 'MAX', diff: 'EASY' },
 ];
 
 function InteractiveShowcaseCard({ carId }: { carId: string }) {
@@ -527,8 +527,8 @@ export default function Home() {
                         <p className="text-white/60 font-mono text-sm">Choose your environment. Command the track.</p>
                     </div>
 
-                    <div className="flex flex-col md:flex-row items-center min-h-[70vh] gap-8 md:gap-12">
-                        {/* LEFT SIDE: Selection Grid (Bottom on Mobile, Left on Desktop) */}
+                    <div className="flex flex-col md:flex-row items-start min-h-[70vh] gap-8 md:gap-12 w-full justify-center">
+                        {/* Selection Grid */}
                         <div className="flex flex-col space-y-4 md:space-y-8 w-full md:w-1/2 order-2 md:order-1">
                             <div className="hidden md:block text-left">
                                 <h2 className="text-6xl font-black text-white uppercase tracking-tighter mb-4">
@@ -537,27 +537,27 @@ export default function Home() {
                                 <p className="text-white/60 font-mono text-lg mb-8">Choose your environment. Command the track.</p>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-3 md:gap-4">
+                            <div className="grid grid-cols-2 gap-2 md:gap-3">
                                 {SHOWCASE_CARS.map((car) => {
                                     const isSelected = selectedCar === car.id;
                                     return (
                                         <div
                                             key={car.id}
                                             onClick={() => setSelectedCar(car.id)}
-                                            className={`cursor-pointer p-4 rounded-xl border backdrop-blur-sm transition-all duration-300 relative overflow-hidden group
+                                            className={`cursor-pointer p-3 rounded-lg border backdrop-blur-sm transition-all duration-300 relative overflow-hidden group
                                             ${isSelected
                                                     ? 'border-red-600 bg-red-950/20 shadow-[0_0_20px_rgba(220,38,38,0.3)]'
                                                     : 'border-white/10 bg-white/5 hover:border-red-600/50 hover:bg-white/10'}`}
                                         >
                                             {/* Minimal thumb preview */}
-                                            <div className="h-24 w-full relative mb-4 flex items-center justify-center opacity-50 group-hover:opacity-100 transition-opacity">
+                                            <div className="h-16 w-full relative mb-2 flex items-center justify-center opacity-50 group-hover:opacity-100 transition-opacity">
                                                 <Image src={car.img} alt={car.name} fill className="object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.8)]" />
                                             </div>
-                                            <h3 className={`text-sm md:text-lg font-bold uppercase transition-colors ${isSelected ? 'text-red-500' : 'text-white'}`}>{car.name}</h3>
-                                            <p className="text-xs text-white/40 font-mono mb-2">{car.type}</p>
+                                            <h3 className={`text-xs md:text-sm font-bold uppercase transition-colors ${isSelected ? 'text-red-500' : 'text-white'}`}>{car.name}</h3>
+                                            <p className="text-[10px] text-white/40 font-mono mb-1">{car.type}</p>
 
                                             {/* Stats */}
-                                            <div className="flex gap-2 text-[10px] font-mono tracking-widest text-white/30">
+                                            <div className="flex gap-2 text-[9px] font-mono tracking-widest text-white/30">
                                                 <span>SPD: {car.speed}</span>
                                                 <span>|</span>
                                                 <span>CTRL: {car.diff}</span>
@@ -565,7 +565,7 @@ export default function Home() {
 
                                             {/* Selection Glow Indicator */}
                                             {isSelected && (
-                                                <motion.div layoutId="selectionGlow" className="absolute inset-0 border-2 border-red-500 rounded-xl pointer-events-none box-border" />
+                                                <motion.div layoutId="selectionGlow" className="absolute inset-0 border-2 border-red-500 rounded-lg pointer-events-none box-border" />
                                             )}
                                         </div>
                                     )
@@ -573,18 +573,110 @@ export default function Home() {
                             </div>
                         </div>
 
-                        {/* RIGHT SIDE: Drift Showcase Area (Top on Mobile, Right on Desktop) */}
-                        <div className="relative w-full md:w-1/2 h-[50vh] md:h-[80vh] flex items-center justify-center overflow-hidden perspective-[1000px] order-1 md:order-2">
+                        {/* Right Side: 3D Track Carousel */}
+                        <div 
+                            className="w-full md:w-1/2 flex items-center justify-center min-h-[400px] md:min-h-[550px] relative mb-10 md:mb-0 order-1 md:order-2"
+                            style={{ perspective: '1200px' }}
+                        >
+                            <div className="relative w-full h-[300px] md:h-[400px] flex items-center justify-center transform-style-3d">
+                                {SHOWCASE_CARS.map((car, index) => {
+                                    const activeIndex = SHOWCASE_CARS.findIndex(c => c.id === selectedCar);
+                                    let offset = index - activeIndex;
+                                    
+                                    // Handle wrap around calculation
+                                    if (offset === 3) offset = -1;
+                                    if (offset === -3) offset = 1;
+                                    if (offset === 2 || offset === -2) offset = 2; // back card
+                                    
+                                    const isActive = offset === 0;
+                                    const isLeft = offset === -1;
+                                    const isRight = offset === 1;
+                                    
+                                    let transform = '';
+                                    let zIndex = 0;
+                                    let opacity = 1;
 
+                                    if (isActive) {
+                                        transform = 'translateX(0px) translateZ(40px) rotateY(0deg) scale(1.1)';
+                                        zIndex = 30;
+                                    } else if (isLeft) {
+                                        transform = 'translateX(-45%) translateZ(-150px) rotateY(20deg) scale(0.9)';
+                                        zIndex = 20;
+                                        opacity = 0.7;
+                                    } else if (isRight) {
+                                        transform = 'translateX(45%) translateZ(-150px) rotateY(-20deg) scale(0.9)';
+                                        zIndex = 20;
+                                        opacity = 0.7;
+                                    } else {
+                                        transform = 'translateX(0px) translateZ(-300px) rotateY(0deg) scale(0.8)';
+                                        zIndex = 10;
+                                        opacity = 0; // Hide the absolute back card
+                                    }
 
+                                    const zoneImages: Record<string, string> = {
+                                        '1': '/track-circuit.png',
+                                        '2': '/offroad-car.png',
+                                        '3': '/construction-car.png',
+                                        '4': '/desert-buggy.png',
+                                    };
+                                    const carImg = zoneImages[car.id] || '/track-circuit.png';
 
-                            {/* Soft Vignette Overlay to focus attention */}
-                            <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.9)_100%)] pointer-events-none mix-blend-multiply"></div>
-                            <AnimatePresence mode="wait">
-                                <InteractiveShowcaseCard key={selectedCar} carId={selectedCar} />
-                            </AnimatePresence>
+                                    return (
+                                        <div
+                                            key={car.id}
+                                            onClick={() => setSelectedCar(car.id)}
+                                            className="absolute top-1/2 left-1/2 -mt-[140px] -ml-[140px] md:-mt-[160px] md:-ml-[160px] w-[280px] md:w-[320px] aspect-square transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)] cursor-pointer"
+                                            style={{
+                                                transform,
+                                                zIndex,
+                                                opacity,
+                                            }}
+                                        >
+                                            <div className={`w-full h-full relative group rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-4 hover:scale-[1.03] border backdrop-blur-md bg-zinc-900/50
+                                                ${isActive ? 'border-red-600 shadow-[0_25px_50px_-12px_rgba(220,38,38,0.5)]' : 'border-white/10 shadow-[0_15px_35px_rgba(0,0,0,0.6)]'}`}
+                                            >
+                                                {/* Ambient Active Glow */}
+                                                {isActive && (
+                                                    <div className="absolute inset-x-0 bottom-0 top-1/2 bg-red-600/30 blur-[60px] rounded-full pointer-events-none z-0 transition-opacity duration-[1000ms]" />
+                                                )}
+
+                                                {/* Dimmer overlay for side cards */}
+                                                <div className={`absolute inset-0 bg-black/40 z-10 transition-opacity duration-700 pointer-events-none group-hover:bg-transparent ${isActive ? 'opacity-0' : 'opacity-100'}`} />
+
+                                                {/* Inner Track Image */}
+                                                <Image
+                                                    src={carImg}
+                                                    alt={`${car.name} Map`}
+                                                    fill
+                                                    className="object-cover transition-transform duration-[1000ms] ease-out group-hover:scale-110"
+                                                />
+                                                
+                                                {/* Overlay gradient */}
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10 pointer-events-none transition-colors duration-500" />
+
+                                                {/* Card Text Content */}
+                                                <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6 z-20">
+                                                    <h3 className={`text-lg md:text-xl font-black uppercase tracking-tighter mb-1 transition-colors duration-500 ${isActive ? 'text-white' : 'text-white/60'}`}>
+                                                        {car.name}
+                                                    </h3>
+                                                    {isActive && (
+                                                        <motion.div
+                                                            initial={{ opacity: 0, y: 10 }}
+                                                            animate={{ opacity: 1, y: 0 }}
+                                                            transition={{ delay: 0.3 }}
+                                                            className="flex items-center gap-2"
+                                                        >
+                                                            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(220,38,38,1)]" />
+                                                            <span className="text-xs text-white/80 font-mono tracking-widest uppercase">Active Zone</span>
+                                                        </motion.div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
                         </div>
-
                     </div>
                 </div>
             </Section>
@@ -762,6 +854,9 @@ export default function Home() {
                             </p>
 
                             <div className="pt-4">
+                                <div className="inline-block bg-red-600 text-white font-bold uppercase tracking-widest text-sm md:text-base px-6 py-2 rounded-lg mb-8 shadow-[0_0_20px_rgba(220,38,38,0.6)]">
+                                    Plug and Play
+                                </div>
                                 <h4 className="text-sm font-bold text-green-500 uppercase tracking-widest mb-6 drop-shadow-[0_0_10px_rgba(34,197,94,0.4)]">Perfect for</h4>
                                 <ul className="space-y-4">
                                     {[
@@ -814,9 +909,6 @@ export default function Home() {
                             <p className="text-white/60 font-mono text-sm md:text-base mb-6 md:mb-8">
                                 Gear Up. Build Out.
                             </p>
-                            <button className="px-6 md:px-8 py-3 md:py-4 text-sm md:text-base bg-white text-black font-bold uppercase tracking-widest hover:bg-blue-500 hover:text-white transition-colors rounded">
-                                Shop All Actions
-                            </button>
                         </div>
 
                         {/* Right Side: Category Blocks */}
@@ -828,11 +920,11 @@ export default function Home() {
                                 </div>
                                 <h3 className="text-xl md:text-2xl font-bold text-white mb-2 relative z-10">3D STUDIO</h3>
                                 <p className="text-sm text-white/50 mb-4 md:mb-6 relative z-10">Collector-grade precision. Custom 3D-printed figures, scale models, and industrial-level prototypes.</p>
-                                <span className="text-blue-500 text-xs font-bold uppercase tracking-widest group-hover:underline">View Parts &rarr;</span>
+                                <span className="text-blue-500 text-xs font-bold uppercase tracking-widest group-hover:underline">Explore Studio &rarr;</span>
                             </div>
 
                             {/* Category 2: The Pro Shop */}
-                            <div onClick={() => alert("Entering The Pro Shop...")} className="store-card opacity-0 translate-y-10 bg-zinc-900/80 border border-white/10 p-6 md:p-8 rounded-2xl hover:border-blue-500 transition-all cursor-pointer group relative overflow-hidden">
+                            <div onClick={() => window.location.href = '/pro-shop'} className="store-card opacity-0 translate-y-10 bg-zinc-900/80 border border-white/10 p-6 md:p-8 rounded-2xl hover:border-blue-500 transition-all cursor-pointer group relative overflow-hidden">
                                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                                     <span className="text-6xl">🏎️</span>
                                 </div>
@@ -909,7 +1001,140 @@ export default function Home() {
                 </div>
             </Section>
 
-            <Footer />
+            {/* 9. CONTACT INFORMATION (Final Section) */}
+            <Section id="contact-info" className="bg-[#0a0a0a] relative z-20 py-16 md:py-28">
+                <div className="container mx-auto px-4 md:px-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 max-w-6xl mx-auto">
+                        {/* Left Side: Contact Information */}
+                        <motion.div
+                            initial={{ opacity: 0, x: -40 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true, margin: "-80px" }}
+                            transition={{ duration: 0.7, ease: "easeOut" }}
+                            className="space-y-8"
+                        >
+                            <div>
+                                <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-3">
+                                    Contact <span className="text-red-600">Information</span>
+                                </h2>
+                                <p className="text-sm md:text-base text-white/50 leading-relaxed max-w-md">
+                                    Reach out to us directly or fill out the form, and our team will get back to you shortly.
+                                </p>
+                            </div>
+
+                            <div className="space-y-6 pt-4">
+                                {/* Phone */}
+                                <div className="flex items-start gap-4 group">
+                                    <div className="w-12 h-12 rounded-xl bg-red-600/10 border border-red-600/20 flex items-center justify-center flex-shrink-0 group-hover:bg-red-600/20 group-hover:border-red-600/40 transition-all duration-300">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4 className="text-sm font-bold text-white uppercase tracking-wider">Phone</h4>
+                                        <p className="text-sm text-white/50 mt-1">+1 (555) 123-4567</p>
+                                    </div>
+                                </div>
+
+                                {/* Email */}
+                                <div className="flex items-start gap-4 group">
+                                    <div className="w-12 h-12 rounded-xl bg-red-600/10 border border-red-600/20 flex items-center justify-center flex-shrink-0 group-hover:bg-red-600/20 group-hover:border-red-600/40 transition-all duration-300">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4 className="text-sm font-bold text-white uppercase tracking-wider">Email</h4>
+                                        <p className="text-sm text-white/50 mt-1">support@turboshack.com</p>
+                                    </div>
+                                </div>
+
+                                {/* Office Address */}
+                                <div className="flex items-start gap-4 group">
+                                    <div className="w-12 h-12 rounded-xl bg-red-600/10 border border-red-600/20 flex items-center justify-center flex-shrink-0 group-hover:bg-red-600/20 group-hover:border-red-600/40 transition-all duration-300">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4 className="text-sm font-bold text-white uppercase tracking-wider">Office Address</h4>
+                                        <p className="text-sm text-white/50 mt-1">123 Raceway Avenue, Motorsport City, MC 90210</p>
+                                    </div>
+                                </div>
+
+                                {/* Company Details */}
+                                <div className="flex items-start gap-4 group">
+                                    <div className="w-12 h-12 rounded-xl bg-red-600/10 border border-red-600/20 flex items-center justify-center flex-shrink-0 group-hover:bg-red-600/20 group-hover:border-red-600/40 transition-all duration-300">
+                                        <span className="text-red-500 font-black text-sm tracking-tighter">TS</span>
+                                    </div>
+                                    <div>
+                                        <h4 className="text-sm font-bold text-white uppercase tracking-wider">Company Details</h4>
+                                        <p className="text-sm text-white/50 mt-1">Turbo Shack RC Performance LLC</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+
+                        {/* Right Side: Send a Message Form */}
+                        <motion.div
+                            initial={{ opacity: 0, x: 40 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true, margin: "-80px" }}
+                            transition={{ duration: 0.7, ease: "easeOut", delay: 0.15 }}
+                            className="bg-zinc-900/60 border border-white/10 rounded-2xl p-6 md:p-10 backdrop-blur-sm"
+                        >
+                            <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter mb-8">
+                                Send a <span className="text-red-600">Message</span>
+                            </h3>
+
+                            <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+                                {/* Name */}
+                                <div>
+                                    <input
+                                        type="text"
+                                        placeholder="Your Name"
+                                        className="w-full bg-zinc-800/60 border border-white/10 rounded-xl px-5 py-3.5 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-red-600/50 focus:ring-1 focus:ring-red-600/20 transition-all duration-300"
+                                    />
+                                </div>
+
+                                {/* Email + Phone */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <input
+                                        type="email"
+                                        placeholder="Email Address"
+                                        className="w-full bg-zinc-800/60 border border-white/10 rounded-xl px-5 py-3.5 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-red-600/50 focus:ring-1 focus:ring-red-600/20 transition-all duration-300"
+                                    />
+                                    <input
+                                        type="tel"
+                                        placeholder="Phone Number"
+                                        className="w-full bg-zinc-800/60 border border-white/10 rounded-xl px-5 py-3.5 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-red-600/50 focus:ring-1 focus:ring-red-600/20 transition-all duration-300"
+                                    />
+                                </div>
+
+                                {/* Message */}
+                                <div>
+                                    <textarea
+                                        placeholder="Tell us about your project..."
+                                        rows={5}
+                                        className="w-full bg-zinc-800/60 border border-white/10 rounded-xl px-5 py-3.5 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-red-600/50 focus:ring-1 focus:ring-red-600/20 transition-all duration-300 resize-y min-h-[120px]"
+                                    />
+                                </div>
+
+                                {/* Submit Button */}
+                                <button
+                                    type="submit"
+                                    className="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-bold uppercase tracking-widest text-sm rounded-xl transition-all duration-300 shadow-[0_0_25px_rgba(220,38,38,0.3)] hover:shadow-[0_0_40px_rgba(220,38,38,0.5)] active:scale-[0.98]"
+                                >
+                                    Send Request
+                                </button>
+                            </form>
+                        </motion.div>
+                    </div>
+                </div>
+            </Section>
+
+
         </main>
     );
 }
