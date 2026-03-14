@@ -978,16 +978,16 @@ export default function Home() {
             </Section>
 
             {/* 9. CONTACT INFORMATION (Final Section) */}
-            <Section id="contact-info" className="bg-[#0a0a0a] relative z-20 py-16 md:py-28">
+            <Section id="contact-info" className="bg-[#0a0a0a] relative z-20 py-16 md:py-28 overflow-x-hidden">
                 <div className="container mx-auto px-4 md:px-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 max-w-6xl mx-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 max-w-6xl mx-auto w-full">
                         {/* Left Side: Contact Information */}
                         <motion.div
-                            initial={{ opacity: 0, x: -40 }}
+                            initial={{ opacity: 0, x: -20 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true, margin: "-80px" }}
                             transition={{ duration: 0.7, ease: "easeOut" }}
-                            className="space-y-8"
+                            className="space-y-8 w-full min-w-0 order-1"
                         >
                             <div>
                                 <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-3">
@@ -1054,11 +1054,11 @@ export default function Home() {
 
                         {/* Right Side: Send a Message Form */}
                         <motion.div
-                            initial={{ opacity: 0, x: 40 }}
+                            initial={{ opacity: 0, x: 20 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true, margin: "-80px" }}
                             transition={{ duration: 0.7, ease: "easeOut", delay: 0.15 }}
-                            className="bg-zinc-900/60 border border-white/10 rounded-2xl p-6 md:p-10 backdrop-blur-sm"
+                            className="bg-zinc-900/60 border border-white/10 rounded-2xl p-6 md:p-10 backdrop-blur-sm w-full min-w-0 order-2"
                         >
                             <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter mb-8">
                                 Send a <span className="text-red-600">Message</span>
@@ -1107,9 +1107,30 @@ export default function Home() {
                             </form>
                         </motion.div>
                     </div>
+
+                    {/* Meet Developers Option */}
+                    <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: 0.5 }}
+                        className="mt-16 md:mt-24 w-full flex justify-center pb-8"
+                    >
+                        <a
+                            href="https://www.instagram.com/intellex.web?igsh=MXc4Z2Uwd243OHpqdA%3D%3D&utm_source=qr"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group relative px-8 py-3 bg-transparent border border-white/20 rounded-full overflow-hidden transition-all hover:border-red-600/50 hover:shadow-[0_0_20px_rgba(220,38,38,0.2)]"
+                        >
+                            <div className="absolute inset-0 bg-red-600/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                            <span className="relative z-10 text-xs md:text-sm font-bold text-white uppercase tracking-widest flex items-center gap-3">
+                                <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                                Meet the Developers
+                            </span>
+                        </a>
+                    </motion.div>
                 </div>
             </Section>
-
 
         </main>
     );
