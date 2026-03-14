@@ -147,6 +147,19 @@ export default function Home() {
     const [selectedCar, setSelectedCar] = useState<string>(SHOWCASE_CARS[0].id);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+    // Auto-rotate showcase cars
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setSelectedCar(prev => {
+                const currentIndex = SHOWCASE_CARS.findIndex(car => car.id === prev);
+                const nextIndex = (currentIndex + 1) % SHOWCASE_CARS.length;
+                return SHOWCASE_CARS[nextIndex].id;
+            });
+        }, 2000);
+
+        return () => clearInterval(interval);
+    }, []);
+
     useGSAP(() => {
         const video = videoRef.current;
         const logo = logoRef.current;
@@ -527,55 +540,18 @@ export default function Home() {
                         <p className="text-white/60 font-mono text-sm">Choose your environment. Command the track.</p>
                     </div>
 
-                    <div className="flex flex-col md:flex-row items-start min-h-[70vh] gap-8 md:gap-12 w-full justify-center">
-                        {/* Selection Grid */}
-                        <div className="flex flex-col space-y-4 md:space-y-8 w-full md:w-1/2 order-2 md:order-1">
-                            <div className="hidden md:block text-left">
-                                <h2 className="text-6xl font-black text-white uppercase tracking-tighter mb-4">
-                                    SELECT YOUR <br /> <span className="text-red-600 drop-shadow-[0_0_15px_rgba(220,38,38,0.5)]">ZONES</span>
-                                </h2>
-                                <p className="text-white/60 font-mono text-lg mb-8">Choose your environment. Command the track.</p>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-2 md:gap-3">
-                                {SHOWCASE_CARS.map((car) => {
-                                    const isSelected = selectedCar === car.id;
-                                    return (
-                                        <div
-                                            key={car.id}
-                                            onClick={() => setSelectedCar(car.id)}
-                                            className={`cursor-pointer p-3 rounded-lg border backdrop-blur-sm transition-all duration-300 relative overflow-hidden group
-                                            ${isSelected
-                                                    ? 'border-red-600 bg-red-950/20 shadow-[0_0_20px_rgba(220,38,38,0.3)]'
-                                                    : 'border-white/10 bg-white/5 hover:border-red-600/50 hover:bg-white/10'}`}
-                                        >
-                                            {/* Minimal thumb preview */}
-                                            <div className="h-16 w-full relative mb-2 flex items-center justify-center opacity-50 group-hover:opacity-100 transition-opacity">
-                                                <Image src={car.img} alt={car.name} fill className="object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.8)]" />
-                                            </div>
-                                            <h3 className={`text-xs md:text-sm font-bold uppercase transition-colors ${isSelected ? 'text-red-500' : 'text-white'}`}>{car.name}</h3>
-                                            <p className="text-[10px] text-white/40 font-mono mb-1">{car.type}</p>
-
-                                            {/* Stats */}
-                                            <div className="flex gap-2 text-[9px] font-mono tracking-widest text-white/30">
-                                                <span>SPD: {car.speed}</span>
-                                                <span>|</span>
-                                                <span>CTRL: {car.diff}</span>
-                                            </div>
-
-                                            {/* Selection Glow Indicator */}
-                                            {isSelected && (
-                                                <motion.div layoutId="selectionGlow" className="absolute inset-0 border-2 border-red-500 rounded-lg pointer-events-none box-border" />
-                                            )}
-                                        </div>
-                                    )
-                                })}
-                            </div>
+                    <div className="flex flex-col items-center min-h-[70vh] gap-8 md:gap-12 w-full justify-center">
+                        {/* Title Section */}
+                        <div className="hidden md:block text-center w-full">
+                            <h2 className="text-6xl font-black text-white uppercase tracking-tighter mb-4">
+                                SELECT YOUR <span className="text-red-600 drop-shadow-[0_0_15px_rgba(220,38,38,0.5)]">ZONES</span>
+                            </h2>
+                            <p className="text-white/60 font-mono text-lg mb-8">Choose your environment. Command the track.</p>
                         </div>
 
-                        {/* Right Side: 3D Track Carousel */}
+                        {/* 3D Track Carousel */}
                         <div 
-                            className="w-full md:w-1/2 flex items-center justify-center min-h-[400px] md:min-h-[550px] relative mb-10 md:mb-0 order-1 md:order-2"
+                            className="w-full flex items-center justify-center min-h-[400px] md:min-h-[550px] relative mb-10 md:mb-0"
                             style={{ perspective: '1200px' }}
                         >
                             <div className="relative w-full h-[300px] md:h-[400px] flex items-center justify-center transform-style-3d">
@@ -920,7 +896,7 @@ export default function Home() {
                                 </div>
                                 <h3 className="text-xl md:text-2xl font-bold text-white mb-2 relative z-10">3D STUDIO</h3>
                                 <p className="text-sm text-white/50 mb-4 md:mb-6 relative z-10">Collector-grade precision. Custom 3D-printed figures, scale models, and industrial-level prototypes.</p>
-                                <span className="text-blue-500 text-xs font-bold uppercase tracking-widest group-hover:underline">Explore Studio &rarr;</span>
+                                <span className="text-blue-500 text-xs font-bold uppercase tracking-widest group-hover:underline">Explore Models &rarr;</span>
                             </div>
 
                             {/* Category 2: The Pro Shop */}
