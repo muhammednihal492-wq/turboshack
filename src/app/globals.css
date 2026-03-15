@@ -173,3 +173,42 @@ body {
         -webkit-mask-image: none !important;
     }
 }
+
+/* Premium Logo Reveal */
+@keyframes float {
+    0%, 100% { transform: translateY(-8px); }
+    50% { transform: translateY(8px); }
+}
+
+.animate-float {
+    animation: float 5s ease-in-out infinite;
+    animation-delay: 2s;
+}
+
+@keyframes sweep-mask {
+    0% { transform: translateX(-150%) skewX(-20deg); }
+    100% { transform: translateX(250%) skewX(-20deg); }
+}
+
+.premium-sweep::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: 0;
+    width: 40%;
+    height: 200%;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.7), transparent);
+    transform: translateX(-150%) skewX(-20deg);
+    animation: sweep-mask 2s cubic-bezier(0.2, 0.8, 0.2, 1) 1.2s forwards;
+    pointer-events: none;
+    -webkit-mask-image: url(/main-logo.png);
+    mask-image: url(/main-logo.png);
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    opacity: 0.9;
+    z-index: 20;
+}

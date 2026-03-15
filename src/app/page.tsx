@@ -170,89 +170,51 @@ export default function Home() {
 
         // --- 1. INITIAL STATE ---
         const introCar = document.getElementById('intro-car');
+        const loader = document.getElementById('loader-overlay');
 
-        // Lock Scroll
+        // Lock scroll while loader is visible
         document.body.style.overflow = 'hidden';
-        window.scrollTo(0, 0);
 
-        // Hide Elements Initially
-        gsap.set(video, { opacity: 0 }); // Video hidden
-        gsap.set(nav, { y: -20, opacity: 0 }); // Nav hidden
-        gsap.set(introCar, { opacity: 0 }); // Car hidden
+        // Elements immediately visible in final positions (behind the loader)
+        gsap.set(video, { opacity: 1 });
+        if (videoRef.current) {
+            videoRef.current.play().catch((e) => console.log("Video auto-play prevented:", e));
+        }
+        
+        gsap.set(nav, { y: 0, opacity: 1 });
+        if (introCar) gsap.set(introCar, { opacity: 1 });
 
-        // Logo: Centered, Scaled 0.8, Invisible
+        // Header Logo: Immediately at Top-Left (behind the loader)
         gsap.set(logo, {
-            top: '50vh',
-            left: '50%',
-            xPercent: -50,
-            yPercent: -50,
-            scale: 0.8,
-            opacity: 0,
-            position: 'fixed'
-        });
-
-        // --- MASTER TIMELINE ---
-        const tl = gsap.timeline({
-            defaults: { ease: "power2.inOut" },
-            onComplete: () => {
-                // Unlock Scroll after intro
-                document.body.style.overflow = '';
-            }
-        });
-
-        // Step 1: Logo Fade In & Scale Up (Cinematic Entry)
-        tl.to(logo, {
-            opacity: 1,
-            scale: 1,
-            duration: 1.5,
-            ease: "power2.out"
-        });
-
-        // Step 2: Hold for 2 Seconds
-        tl.to({}, { duration: 2.0 });
-
-        // Step 3: Logo Move & Track Draw (Simultaneous)
-        const moveTime = 3.0;
-
-        tl.addLabel("moveStart");
-
-        // 3a. Move Logo to Top-Left
-        tl.to(logo, {
             top: '1.5rem',
             left: '2rem',
             xPercent: 0,
             yPercent: 0,
-            scale: 0.35, // Scale down small for header
-            duration: moveTime,
-            ease: "expo.inOut", // Smooth cinematic easing
+            scale: 0.5,
+            opacity: 1,
+            position: 'fixed',
             transformOrigin: "top left"
-        }, "moveStart");
+        });
 
-        // 3d. Reveal Video & Nav (Subtle, background)
-        tl.to(video, {
-            opacity: 1,
-            duration: 2.0,
-            onStart: () => {
-                if (videoRef.current) {
-                    videoRef.current.play().catch((e) => console.log("Video auto-play prevented:", e));
-                }
-            }
-        }, "moveStart+=0.5");
-
-        tl.to(nav, {
-            y: 0,
-            opacity: 1,
-            duration: 1.0
-        }, "moveStart+=1.5");
-
-        // Quotes fade in sequentially
-        tl.to('.quote-item', {
+        // Quotes immediately visible
+        gsap.set('.quote-item', {
             x: 0,
             opacity: 1,
-            duration: 1.2,
-            stagger: 0.2,
-            ease: "power3.out"
-        }, "moveStart+=1.2");
+        });
+
+        // --- LOADER TIMELINE ---
+        if (loader) {
+            gsap.to(loader, {
+                opacity: 0,
+                duration: 0.8,
+                delay: 0.5, // Hold for half a second before fading out
+                ease: "power2.inOut",
+                onComplete: () => {
+                    loader.style.display = 'none';
+                    document.body.style.overflow = ''; // Unlock scroll
+                }
+            });
+        }
 
         // --- VIDEO AND TEXT SCROLL SCROLL ANIMATION (PARALLAX CACHED) ---
 
@@ -395,6 +357,23 @@ export default function Home() {
 
     return (
         <main className="relative bg-black text-white min-h-[600vh] overflow-x-hidden font-sans selection:bg-red-600 selection:text-black">
+
+            {/* Initial Loader Overlay */}
+            <div
+                id="loader-overlay"
+                className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
+            >
+                <div className="w-[80vw] md:w-[40vw] max-w-2xl relative">
+                    <Image
+                        src="/main-logo.png"
+                        alt="Turbo Shack Loading"
+                        width={1200}
+                        height={400}
+                        className="w-full h-auto drop-shadow-[0_0_50px_rgba(220,38,38,0.5)]"
+                        priority
+                    />
+                </div>
+            </div>
 
             {/* Navbar Background (Only appears after intro) */}
             <div className="absolute top-0 left-0 w-full h-20 md:h-24 bg-gradient-to-b from-black/80 to-transparent z-40 pointer-events-none" />
@@ -551,10 +530,10 @@ export default function Home() {
 
                         {/* 3D Track Carousel */}
                         <div 
-                            className="w-full flex items-center justify-center min-h-[400px] md:min-h-[550px] relative mb-10 md:mb-0"
+                            className="w-full flex items-center justify-center min-h-[400px] md:min-h-[700px] relative mb-10 md:mb-0"
                             style={{ perspective: '1200px' }}
                         >
-                            <div className="relative w-full h-[300px] md:h-[400px] flex items-center justify-center transform-style-3d">
+                            <div className="relative w-full h-[300px] md:h-[600px] flex items-center justify-center transform-style-3d">
                                 {SHOWCASE_CARS.map((car, index) => {
                                     const activeIndex = SHOWCASE_CARS.findIndex(c => c.id === selectedCar);
                                     let offset = index - activeIndex;
@@ -576,11 +555,11 @@ export default function Home() {
                                         transform = 'translateX(0px) translateZ(40px) rotateY(0deg) scale(1.1)';
                                         zIndex = 30;
                                     } else if (isLeft) {
-                                        transform = 'translateX(-45%) translateZ(-150px) rotateY(20deg) scale(0.9)';
+                                        transform = 'translateX(-55%) translateZ(-150px) rotateY(20deg) scale(0.9)';
                                         zIndex = 20;
                                         opacity = 0.7;
                                     } else if (isRight) {
-                                        transform = 'translateX(45%) translateZ(-150px) rotateY(-20deg) scale(0.9)';
+                                        transform = 'translateX(55%) translateZ(-150px) rotateY(-20deg) scale(0.9)';
                                         zIndex = 20;
                                         opacity = 0.7;
                                     } else {
@@ -601,7 +580,7 @@ export default function Home() {
                                         <div
                                             key={car.id}
                                             onClick={() => setSelectedCar(car.id)}
-                                            className="absolute top-1/2 left-1/2 -mt-[140px] -ml-[140px] md:-mt-[160px] md:-ml-[160px] w-[280px] md:w-[320px] aspect-square transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)] cursor-pointer"
+                                            className="absolute top-1/2 left-1/2 -mt-[140px] -ml-[140px] md:-mt-[250px] md:-ml-[250px] w-[280px] md:w-[500px] aspect-square transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)] cursor-pointer"
                                             style={{
                                                 transform,
                                                 zIndex,
@@ -805,8 +784,8 @@ export default function Home() {
                             className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(220,38,38,0.15)] group bg-zinc-900"
                         >
                             <Image
-                                src="/booking.png"
-                                alt="Book Your Event Dashboard"
+                                src="/pluug.png"
+                                alt="Perfect for events"
                                 fill
                                 className="object-cover z-10 opacity-90 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105"
                             />
@@ -831,9 +810,9 @@ export default function Home() {
 
                             <div className="pt-4">
                                 <div className="inline-block bg-red-600 text-white font-bold uppercase tracking-widest text-sm md:text-base px-6 py-2 rounded-lg mb-8 shadow-[0_0_20px_rgba(220,38,38,0.6)]">
-                                    Plug and Play
+                                    Plug and Play System Perfect For
                                 </div>
-                                <h4 className="text-sm font-bold text-green-500 uppercase tracking-widest mb-6 drop-shadow-[0_0_10px_rgba(34,197,94,0.4)]">Perfect for</h4>
+
                                 <ul className="space-y-4">
                                     {[
                                         "Corporate Events",
