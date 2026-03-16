@@ -140,7 +140,6 @@ function InteractiveShowcaseCard({ carId }: { carId: string }) {
 export default function Home() {
     const videoRef = useRef<HTMLVideoElement>(null);
     const heroRef = useRef<HTMLDivElement>(null);
-    const logoRef = useRef<HTMLDivElement>(null);
     const navRef = useRef<HTMLElement>(null);
 
     // Showcase State
@@ -162,11 +161,10 @@ export default function Home() {
 
     useGSAP(() => {
         const video = videoRef.current;
-        const logo = logoRef.current;
         const nav = navRef.current;
         const hero = heroRef.current;
 
-        if (!video || !logo || !nav || !hero) return;
+        if (!video || !nav || !hero) return;
 
         // --- 1. INITIAL STATE ---
         const introCar = document.getElementById('intro-car');
@@ -184,17 +182,7 @@ export default function Home() {
         gsap.set(nav, { y: 0, opacity: 1 });
         if (introCar) gsap.set(introCar, { opacity: 1 });
 
-        // Header Logo: Immediately at Top-Left (behind the loader)
-        gsap.set(logo, {
-            top: '1.5rem',
-            left: '2rem',
-            xPercent: 0,
-            yPercent: 0,
-            scale: 0.5,
-            opacity: 1,
-            position: 'fixed',
-            transformOrigin: "top left"
-        });
+        // Header Logo has been moved directly inside nav elements
 
         // Quotes immediately visible
         gsap.set('.quote-item', {
@@ -381,8 +369,20 @@ export default function Home() {
             {/* Navigation */}
             <nav
                 ref={navRef}
-                className="absolute top-0 right-0 p-4 md:p-8 z-50 opacity-0"
+                className="absolute top-0 left-0 w-full px-4 py-0 md:px-8 md:py-0 z-50 opacity-0 flex justify-between items-center -mt-8 md:-mt-16"
             >
+                {/* Logo */}
+                <div className="w-32 md:w-56 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+                    <Image
+                        src="/main-logo.png"
+                        alt="Turbo Shack"
+                        width={800}
+                        height={240}
+                        className="w-full h-auto drop-shadow-[0_0_20px_rgba(220,38,38,0.6)]"
+                        priority
+                    />
+                </div>
+
                 {/* Desktop Menu */}
                 <ul className="hidden md:flex space-x-8 text-sm uppercase tracking-widest font-bold text-white/80">
                     <li className="hover:text-red-600 cursor-pointer transition-colors" onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}>About</li>
@@ -436,21 +436,7 @@ export default function Home() {
                 )}
             </AnimatePresence>
 
-            {/* Logo Container (Animated) */}
-            <div
-                ref={logoRef}
-                className="fixed z-50 w-64 md:w-80 opacity-0"
-                style={{ willChange: 'transform, top, left' }}
-            >
-                <Image
-                    src="/main-logo.png"
-                    alt="Turbo Shack"
-                    width={800}
-                    height={240}
-                    className="w-full h-auto drop-shadow-[0_0_35px_rgba(220,38,38,0.8)]"
-                    priority
-                />
-            </div>
+            {/* Logo is now inside Navbar */}
 
             <section ref={heroRef} className="relative w-full h-[100vh] overflow-hidden bg-black flex items-center pointer-events-auto z-0">
                 {/* Background Red Gradient Overlays */}
@@ -662,7 +648,7 @@ export default function Home() {
 
                     {/* Right: Realistic Car Details image */}
                     <div className="md:w-1/2 w-full flex justify-center items-center">
-                        <div className="about-image relative w-[80%] aspect-square md:aspect-[4/3] rounded-2xl overflow-hidden group opacity-0 translate-y-16 scale-95">
+                        <div className="about-image relative w-full md:w-[110%] aspect-[4/3] rounded-2xl overflow-hidden group opacity-0 translate-y-16 scale-95">
                             {/* Ambient Glow behind image */}
                             <div className="absolute inset-0 bg-red-600/20 blur-[50px] group-hover:bg-red-500/40 transition-colors duration-1000 z-0"></div>
 
@@ -784,7 +770,7 @@ export default function Home() {
                             className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(220,38,38,0.15)] group bg-zinc-900"
                         >
                             <Image
-                                src="/finaal.png"
+                                src="/ui.png"
                                 alt="Perfect for events"
                                 fill
                                 className="object-cover z-10 opacity-90 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105"
@@ -809,7 +795,7 @@ export default function Home() {
                             </p>
 
                             <div className="pt-4">
-                                <div className="inline-block bg-red-600 text-white font-bold uppercase tracking-widest text-sm md:text-base px-6 py-2 rounded-lg mb-8 shadow-[0_0_20px_rgba(220,38,38,0.6)]">
+                                <div className="inline-block bg-red-600 text-white font-bold uppercase tracking-widest text-[10px] sm:text-xs md:text-base px-3 sm:px-4 md:px-6 py-2 rounded-lg mb-8 shadow-[0_0_20px_rgba(220,38,38,0.6)] whitespace-nowrap">
                                     Plug and Play System Perfect For
                                 </div>
 
