@@ -669,7 +669,7 @@ export default function Home() {
                             {/* Realistic Car Image with Hover Floating */}
                             <div className="relative w-full h-full z-10 group-hover:-translate-y-4 group-hover:scale-105 transition-all duration-[2000ms] ease-out">
                                 <Image
-                                    src="/off1.png"
+                                    src="/C.png"
                                     alt="Professional RC Car Detail"
                                     fill
                                     className="object-cover"
@@ -784,7 +784,7 @@ export default function Home() {
                             className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(220,38,38,0.15)] group bg-zinc-900"
                         >
                             <Image
-                                src="/pluug.png"
+                                src="/finaal.png"
                                 alt="Perfect for events"
                                 fill
                                 className="object-cover z-10 opacity-90 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105"
