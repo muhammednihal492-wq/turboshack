@@ -16,17 +16,20 @@ export default function Footer() {
                         <h3 className="text-sm font-bold tracking-widest text-white uppercase">Contact</h3>
                         <div className="space-y-4 text-sm font-light text-white/70">
                             <p className="leading-relaxed">
-                                Turbo Shack<br />
-                                123 Raceway Avenue<br />
-                                Motorsport City, MC 90210
+                                Turbo Shack private limited<br />
+                                Connexxions Realtors and Office Interiors, #82/2, NVReddy Complex, Ramaiah Reddy Layout, Wellington Paradise, Singasandra, Bengaluru, Karnataka 560114
                             </p>
                             <div className="flex items-center space-x-3 hover:text-white transition-colors">
                                 <span className="text-lg">📞</span>
-                                <span>+1 (555) 123-4567</span>
+                                <span>9187413136</span>
                             </div>
                             <div className="flex items-center space-x-3 hover:text-white transition-colors">
                                 <span className="text-lg">✉️</span>
-                                <span>support@turboshack.com</span>
+                                <span className="break-all">CONTACT@TURBOSHACK.IN</span>
+                            </div>
+                            <div className="flex items-center space-x-3 hover:text-white transition-colors">
+                                <span className="text-lg">🌐</span>
+                                <span>TURBOSHACK.IN</span>
                             </div>
                         </div>
                     </div>

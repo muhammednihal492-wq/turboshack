@@ -178,7 +178,7 @@ export default function Home() {
         if (videoRef.current) {
             videoRef.current.play().catch((e) => console.log("Video auto-play prevented:", e));
         }
-        
+
         gsap.set(nav, { y: 0, opacity: 1 });
         if (introCar) gsap.set(introCar, { opacity: 1 });
 
@@ -515,7 +515,7 @@ export default function Home() {
                         </div>
 
                         {/* 3D Track Carousel */}
-                        <div 
+                        <div
                             className="w-full flex items-center justify-center min-h-[400px] md:min-h-[700px] relative mb-10 md:mb-0"
                             style={{ perspective: '1200px' }}
                         >
@@ -523,16 +523,16 @@ export default function Home() {
                                 {SHOWCASE_CARS.map((car, index) => {
                                     const activeIndex = SHOWCASE_CARS.findIndex(c => c.id === selectedCar);
                                     let offset = index - activeIndex;
-                                    
+
                                     // Handle wrap around calculation
                                     if (offset === 3) offset = -1;
                                     if (offset === -3) offset = 1;
                                     if (offset === 2 || offset === -2) offset = 2; // back card
-                                    
+
                                     const isActive = offset === 0;
                                     const isLeft = offset === -1;
                                     const isRight = offset === 1;
-                                    
+
                                     let transform = '';
                                     let zIndex = 0;
                                     let opacity = 1;
@@ -591,7 +591,7 @@ export default function Home() {
                                                     fill
                                                     className="object-cover transition-transform duration-[1000ms] ease-out group-hover:scale-110"
                                                 />
-                                                
+
                                                 {/* Overlay gradient */}
                                                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10 pointer-events-none transition-colors duration-500" />
 
@@ -932,9 +932,8 @@ export default function Home() {
                                 Whether you're a weekend basher or a pro racer, this is your home.
                             </p>
                             <div className="flex justify-center space-x-4 md:space-x-8 text-[10px] md:text-sm font-bold text-white uppercase tracking-widest mt-8 md:mt-12">
-                                <span className="hover:text-yellow-500 cursor-pointer transition-colors">Instagram</span>
-                                <span className="hover:text-yellow-500 cursor-pointer transition-colors">YouTube</span>
-                                <span className="hover:text-yellow-500 cursor-pointer transition-colors">Discord</span>
+                                <a href="https://www.instagram.com/turboshack.in/" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-500 cursor-pointer transition-colors">Instagram</a>
+                                <a href="https://wa.me/9187413136" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-500 cursor-pointer transition-colors">WhatsApp</a>
                             </div>
                             <p className="text-xs text-white/30 uppercase tracking-widest">© 2026 TURBO SHACK. ALL RIGHTS RESERVED.</p>
                         </div>
@@ -965,7 +964,7 @@ export default function Home() {
 
                             <div className="space-y-6 pt-4">
                                 {/* Phone */}
-                                <div className="flex items-start gap-4 group">
+                                <a href="tel:+9187413136" className="flex items-start gap-4 group cursor-pointer block">
                                     <div className="w-12 h-12 rounded-xl bg-red-600/10 border border-red-600/20 flex items-center justify-center flex-shrink-0 group-hover:bg-red-600/20 group-hover:border-red-600/40 transition-all duration-300">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
@@ -973,12 +972,12 @@ export default function Home() {
                                     </div>
                                     <div>
                                         <h4 className="text-sm font-bold text-white uppercase tracking-wider">Phone</h4>
-                                        <p className="text-sm text-white/50 mt-1">+1 (555) 123-4567</p>
+                                        <p className="text-sm text-white/50 mt-1 hover:text-red-400 hover:underline transition-colors">9187413136</p>
                                     </div>
-                                </div>
+                                </a>
 
                                 {/* Email */}
-                                <div className="flex items-start gap-4 group">
+                                <a href="mailto:CONTACT@TURBOSHACK.IN" className="flex items-start gap-4 group cursor-pointer block">
                                     <div className="w-12 h-12 rounded-xl bg-red-600/10 border border-red-600/20 flex items-center justify-center flex-shrink-0 group-hover:bg-red-600/20 group-hover:border-red-600/40 transition-all duration-300">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -986,12 +985,12 @@ export default function Home() {
                                     </div>
                                     <div>
                                         <h4 className="text-sm font-bold text-white uppercase tracking-wider">Email</h4>
-                                        <p className="text-sm text-white/50 mt-1">support@turboshack.com</p>
+                                        <p className="text-sm text-white/50 mt-1 break-all hover:text-red-400 hover:underline transition-colors">CONTACT@TURBOSHACK.IN</p>
                                     </div>
-                                </div>
+                                </a>
 
                                 {/* Office Address */}
-                                <div className="flex items-start gap-4 group">
+                                <a href="https://www.google.com/maps/search/?api=1&query=Connexxions+Realtors+and+Office+Interiors,+82/2,+NVReddy+Complex,+Singasandra,+Bengaluru,+Karnataka+560114" target="_blank" rel="noopener noreferrer" className="flex items-start gap-4 group cursor-pointer block">
                                     <div className="w-12 h-12 rounded-xl bg-red-600/10 border border-red-600/20 flex items-center justify-center flex-shrink-0 group-hover:bg-red-600/20 group-hover:border-red-600/40 transition-all duration-300">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -1000,20 +999,35 @@ export default function Home() {
                                     </div>
                                     <div>
                                         <h4 className="text-sm font-bold text-white uppercase tracking-wider">Office Address</h4>
-                                        <p className="text-sm text-white/50 mt-1">123 Raceway Avenue, Motorsport City, MC 90210</p>
+                                        <p className="text-sm text-white/50 mt-1 hover:text-red-400 transition-colors">Connexxions Realtors and Office Interiors, #82/2, NVReddy Complex, Ramaiah Reddy Layout, Wellington Paradise, Singasandra, Bengaluru, Karnataka 560114</p>
                                     </div>
-                                </div>
+                                </a>
 
                                 {/* Company Details */}
-                                <div className="flex items-start gap-4 group">
+                                <a href="#about-finale" className="flex items-start gap-4 group cursor-pointer block">
                                     <div className="w-12 h-12 rounded-xl bg-red-600/10 border border-red-600/20 flex items-center justify-center flex-shrink-0 group-hover:bg-red-600/20 group-hover:border-red-600/40 transition-all duration-300">
                                         <span className="text-red-500 font-black text-sm tracking-tighter">TS</span>
                                     </div>
                                     <div>
                                         <h4 className="text-sm font-bold text-white uppercase tracking-wider">Company Details</h4>
-                                        <p className="text-sm text-white/50 mt-1">Turbo Shack RC Performance LLC</p>
+                                        <p className="text-sm text-white/50 mt-1 hover:text-red-400 transition-colors">Turbo Shack private limited</p>
                                     </div>
-                                </div>
+                                </a>
+
+                                {/* Instagram */}
+                                <a href="https://www.instagram.com/turboshack.in/" target="_blank" rel="noopener noreferrer" className="flex items-start gap-4 group cursor-pointer">
+                                    <div className="w-12 h-12 rounded-xl bg-red-600/10 border border-red-600/20 flex items-center justify-center flex-shrink-0 group-hover:bg-red-600/20 group-hover:border-red-600/40 transition-all duration-300">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4 className="text-sm font-bold text-white uppercase tracking-wider">Instagram</h4>
+                                        <p className="text-sm text-white/50 mt-1">@TURBOSHACK.IN</p>
+                                    </div>
+                                </a>
                             </div>
                         </motion.div>
 
@@ -1074,7 +1088,7 @@ export default function Home() {
                     </div>
 
                     {/* Meet Developers Option */}
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
