@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import Section from '@/components/Section';
 import CarVisual from '@/components/CarVisual';
 
@@ -855,24 +856,24 @@ export default function Home() {
                         {/* Right Side: Category Blocks */}
                         <div className="md:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
                             {/* Category 1: 3D Studio */}
-                            <div onClick={() => window.location.href = '/3d-studio'} className="store-card opacity-0 translate-y-10 bg-zinc-900/80 border border-white/10 p-6 md:p-8 rounded-2xl hover:border-blue-500 transition-all cursor-pointer group relative overflow-hidden">
+                            <Link href="/3d-studio" className="store-card block opacity-0 translate-y-10 bg-zinc-900/80 border border-white/10 p-6 md:p-8 rounded-2xl hover:border-blue-500 transition-all cursor-pointer group relative overflow-hidden">
                                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                                     <span className="text-6xl">⚙️</span>
                                 </div>
                                 <h3 className="text-xl md:text-2xl font-bold text-white mb-2 relative z-10">3D STUDIO</h3>
                                 <p className="text-sm text-white/50 mb-4 md:mb-6 relative z-10">Collector-grade precision. Custom 3D-printed figures, scale models, and industrial-level prototypes.</p>
                                 <span className="text-blue-500 text-xs font-bold uppercase tracking-widest group-hover:underline">Explore Models &rarr;</span>
-                            </div>
+                            </Link>
 
                             {/* Category 2: The Pro Shop */}
-                            <div onClick={() => window.location.href = '/pro-shop'} className="store-card opacity-0 translate-y-10 bg-zinc-900/80 border border-white/10 p-6 md:p-8 rounded-2xl hover:border-blue-500 transition-all cursor-pointer group relative overflow-hidden">
+                            <Link href="/pro-shop" className="store-card block opacity-0 translate-y-10 bg-zinc-900/80 border border-white/10 p-6 md:p-8 rounded-2xl hover:border-blue-500 transition-all cursor-pointer group relative overflow-hidden">
                                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                                     <span className="text-6xl">🏎️</span>
                                 </div>
                                 <h3 className="text-xl md:text-2xl font-bold text-white mb-2 relative z-10">THE PRO SHOP</h3>
                                 <p className="text-sm text-white/50 mb-6 relative z-10">Driven by performance. Premium RC machines, essential upgrades, spare parts, and pro accessories.</p>
                                 <span className="text-blue-500 text-xs font-bold uppercase tracking-widest group-hover:underline">Browse Pro Shop &rarr;</span>
-                            </div>
+                            </Link>
                         </div>
                     </div>
                 </div>

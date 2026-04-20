@@ -33,6 +33,15 @@ export default function ThreeDStudio() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    // Auto-play the concepts slider so they are visible one after the other
+    useEffect(() => {
+        const slideTimer = setInterval(() => {
+            setDirection(1);
+            setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+        }, 3000);
+        return () => clearInterval(slideTimer);
+    }, [currentSlide]);
+
     const nextSlide = () => {
         setDirection(1);
         setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
@@ -122,26 +131,26 @@ export default function ThreeDStudio() {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ duration: 0.5 }}
-                            className="text-center mb-16 max-w-3xl"
+                            className="text-center mb-10 md:mb-16 max-w-3xl"
                         >
-                            <h1 className="text-6xl md:text-8xl font-black text-slate-900 tracking-tighter mb-6 leading-tight">
+                            <h1 className="text-4xl sm:text-5xl md:text-8xl font-black text-slate-900 tracking-tighter mb-3 md:mb-6 leading-tight px-2">
                                 {currentSlide === 0 ? "Customize Your Toy" : HERO_SLIDES[currentSlide].title}
                             </h1>
-                            <p className="text-xl md:text-2xl text-slate-500 font-medium">
+                            <p className="text-base sm:text-lg md:text-2xl text-slate-500 font-medium px-4 md:px-0">
                                 {HERO_SLIDES[currentSlide].subtitle}
                             </p>
                         </motion.div>
                     </AnimatePresence>
 
                     {/* Slider Canvas */}
-                    <div className="relative w-full flex items-center justify-between mt-4">
+                    <div className="relative w-full flex items-center justify-center md:gap-16 mt-4 md:mt-8 z-20">
                         {/* Prev Btn */}
-                        <motion.button onClick={prevSlide} whileHover={{ x: -10, scale: 1.1 }} whileTap={{ scale: 0.9 }} className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-white shadow-[0_10px_30px_rgba(0,0,0,0.05)] flex items-center justify-center text-slate-400 hover:text-cyan-500 border border-slate-100 transition-all z-20">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-8 h-8"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
+                        <motion.button onClick={prevSlide} whileHover={{ x: -10, scale: 1.1 }} whileTap={{ scale: 0.9 }} className="shrink-0 w-12 h-12 md:w-20 md:h-20 rounded-full bg-white shadow-[0_10px_30px_rgba(0,0,0,0.05)] flex items-center justify-center text-slate-400 hover:text-cyan-500 border border-slate-100 transition-all z-20 absolute left-0 md:relative md:left-auto">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6 md:w-8 md:h-8"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
                         </motion.button>
 
                         {/* Interactive 3D Model Placeholder */}
-                        <div className="relative w-[320px] h-[320px] md:w-[500px] md:h-[500px] flex items-center justify-center perspective-1000">
+                        <div className="relative w-[240px] h-[240px] sm:w-[280px] sm:h-[280px] md:w-[500px] md:h-[500px] flex items-center justify-center perspective-1000 shrink-0">
                             <AnimatePresence initial={false} custom={direction}>
                                 <motion.div
                                     key={currentSlide}
@@ -154,34 +163,34 @@ export default function ThreeDStudio() {
                                 >
                                     {/* 3D Floating Object Card */}
                                     <motion.div 
-                                        animate={{ rotateY: 360, y: [-20, 20, -20] }}
+                                        animate={{ rotateY: 360, y: [-15, 15, -15] }}
                                         transition={{ rotateY: { duration: 25, repeat: Infinity, ease: "linear" }, y: { duration: 6, repeat: Infinity, ease: "easeInOut" } }}
-                                        className="w-full h-full bg-white/60 backdrop-blur-3xl rounded-[3rem] border border-white shadow-[0_40px_80px_rgba(0,0,0,0.05),_inset_0_0_20px_rgba(255,255,255,1)] flex items-center justify-center relative overflow-hidden group"
+                                        className="w-full h-full bg-white/60 backdrop-blur-3xl rounded-[2.5rem] md:rounded-[3rem] border border-white shadow-[0_20px_40px_rgba(0,0,0,0.05),_inset_0_0_20px_rgba(255,255,255,1)] md:shadow-[0_40px_80px_rgba(0,0,0,0.05),_inset_0_0_20px_rgba(255,255,255,1)] flex items-center justify-center relative overflow-hidden group"
                                         style={{ transformStyle: "preserve-3d" }}
                                     >
                                         <div className="absolute inset-0 bg-gradient-to-br from-cyan-50 to-purple-50 opacity-50 group-hover:opacity-100 transition-opacity" />
-                                        <div className="text-[120px] md:text-[180px] drop-shadow-[0_30px_30px_rgba(0,0,0,0.2)] z-10" style={{ transform: "translateZ(80px)" }}>
+                                        <div className="text-[100px] md:text-[180px] drop-shadow-[0_20px_20px_rgba(0,0,0,0.15)] md:drop-shadow-[0_30px_30px_rgba(0,0,0,0.2)] z-10 leading-none flex flex-col items-center justify-center gap-1" style={{ transform: "translateZ(60px)" }}>
                                             {HERO_SLIDES[currentSlide].icon}
                                         </div>
                                     </motion.div>
                                     {/* Floor Shadow */}
-                                    <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-[80%] h-12 bg-black/10 blur-[25px] rounded-full scale-y-50" />
+                                    <div className="absolute -bottom-10 md:-bottom-16 left-1/2 -translate-x-1/2 w-[80%] h-8 md:h-12 bg-black/10 blur-[15px] md:blur-[25px] rounded-full scale-y-50" />
                                 </motion.div>
                             </AnimatePresence>
                         </div>
 
                         {/* Next Btn */}
-                        <motion.button onClick={nextSlide} whileHover={{ x: 10, scale: 1.1 }} whileTap={{ scale: 0.9 }} className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-white shadow-[0_10px_30px_rgba(0,0,0,0.05)] flex items-center justify-center text-slate-400 hover:text-cyan-500 border border-slate-100 transition-all z-20">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-8 h-8"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+                        <motion.button onClick={nextSlide} whileHover={{ x: 10, scale: 1.1 }} whileTap={{ scale: 0.9 }} className="shrink-0 w-12 h-12 md:w-20 md:h-20 rounded-full bg-white shadow-[0_10px_30px_rgba(0,0,0,0.05)] flex items-center justify-center text-slate-400 hover:text-cyan-500 border border-slate-100 transition-all z-20 absolute right-0 md:relative md:right-auto">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6 md:w-8 md:h-8"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
                         </motion.button>
                     </div>
                 </div>
             </section>
 
             {/* 3. CONCEPT / SERVICES SECTION */}
-            <section id="products" className="py-24 md:py-32 bg-white relative z-10 w-full overflow-hidden border-t border-slate-100">
+            <section id="products" className="py-12 md:py-32 bg-white relative z-10 w-full overflow-hidden border-t border-slate-100">
                 <div className="max-w-7xl mx-auto px-6">
-                    <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp} className="text-center mb-24">
+                    <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp} className="text-center mb-12 md:mb-24">
                         <h2 className="text-5xl md:text-6xl font-black text-slate-900 tracking-tighter">Our Concepts</h2>
                     </motion.div>
 
@@ -210,7 +219,7 @@ export default function ThreeDStudio() {
             </section>
 
             {/* 4. WHATSAPP CTA SECTION */}
-            <section id="reach-us" className="py-24 bg-slate-50">
+            <section id="reach-us" className="py-12 md:py-24 bg-slate-50">
                 <div className="max-w-6xl mx-auto px-6">
                     <motion.div 
                         initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}
@@ -241,9 +250,9 @@ export default function ThreeDStudio() {
             </section>
 
             {/* 5. QUERY / CONTACT FORM */}
-            <section id="contact" className="py-24 md:py-32 bg-white relative">
+            <section id="contact" className="py-12 md:py-32 bg-white relative">
                 <div className="max-w-5xl mx-auto px-6">
-                    <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="text-center mb-20">
+                    <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="text-center mb-10 md:mb-20">
                         <h2 className="text-5xl md:text-6xl font-black text-slate-900 tracking-tighter">For Query</h2>
                     </motion.div>
 
@@ -272,8 +281,8 @@ export default function ThreeDStudio() {
             </section>
 
             {/* 6. QUICK LINKS & 7. FOOTER */}
-            <footer className="bg-slate-900 border-t border-slate-800 pt-24 pb-12 text-white">
-                <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-16 mb-20">
+            <footer className="bg-slate-900 border-t border-slate-800 pt-12 md:pt-24 pb-12 text-white">
+                <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16 mb-12 md:mb-20">
                     {/* Left: Logo */}
                     <div className="flex flex-col gap-8">
                         <div className="flex items-center gap-4">
