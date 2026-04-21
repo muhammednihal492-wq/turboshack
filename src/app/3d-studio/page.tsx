@@ -52,13 +52,13 @@ export default function ThreeDStudio() {
         setCurrentSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
     };
 
-    const slideVariants = {
+    const slideVariants: any = {
         enter: (dir: number) => ({ x: dir > 0 ? 100 : -100, opacity: 0 }),
         center: { zIndex: 1, x: 0, opacity: 1, transition: { duration: 0.8, ease: "easeOut" } },
         exit: (dir: number) => ({ zIndex: 0, x: dir < 0 ? 100 : -100, opacity: 0, transition: { duration: 0.8, ease: "easeIn" } })
     };
 
-    const fadeInUp = {
+    const fadeInUp: any = {
         hidden: { opacity: 0, y: 40 },
         visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
     };
@@ -199,7 +199,7 @@ export default function ThreeDStudio() {
                             <motion.div 
                                 key={i}
                                 initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }}
-                                variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay: i * 0.1, ease: "easeOut" } } }}
+                                variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay: i * 0.1, ease: "easeOut" } } } as any}
                                 whileHover={{ y: -15, boxShadow: "0 40px 80px rgba(0,0,0,0.08)" }}
                                 className="bg-[#fafafa] rounded-[2.5rem] p-10 text-center border border-slate-100 transition-all flex flex-col items-center group relative overflow-hidden"
                             >
